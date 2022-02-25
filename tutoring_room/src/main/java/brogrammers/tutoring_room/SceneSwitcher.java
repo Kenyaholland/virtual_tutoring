@@ -47,11 +47,10 @@ public class SceneSwitcher extends Pane{
 		VBox roomVBox = new VBox();
 		RoomView roomView = new RoomView(this.stage);
 
+		roomVBox.setAlignment(Pos.TOP_LEFT);
 		roomVBox.getChildren().add(roomView);
-        Scene roomScene = new Scene(roomVBox, 800, 500);
+        Scene roomScene = new Scene(roomVBox, 1000, 600);
         stage.setTitle("Virtual Tutoring Room");
-        
-        roomVBox.setAlignment(Pos.CENTER);
         
         //directoryViewScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
         
