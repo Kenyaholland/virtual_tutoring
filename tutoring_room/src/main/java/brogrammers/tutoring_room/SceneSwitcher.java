@@ -2,6 +2,7 @@ package brogrammers.tutoring_room;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -14,14 +15,13 @@ public class SceneSwitcher extends Pane{
 	}
 	
 	public Scene LoginScene() {
-		VBox loginVBox = new VBox();
+		HBox loginBox = new HBox();
     	LoginView loginView = new LoginView(this.stage);
     	stage.setTitle("Sign in");
     	
-    	loginVBox.getChildren().add(loginView);
-        Scene loginScene = new Scene(loginVBox, 800, 500);
-        
-        loginVBox.setAlignment(Pos.CENTER);
+    	loginBox.setAlignment(Pos.CENTER);
+    	loginBox.getChildren().add(loginView);
+        Scene loginScene = new Scene(loginBox, 400, 500);
         
       //loginScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
 
@@ -32,11 +32,10 @@ public class SceneSwitcher extends Pane{
 		VBox directoryVBox = new VBox();
 		DirectoryView directoryView = new DirectoryView(this.stage);
 
+		directoryVBox.setAlignment(Pos.TOP_LEFT);
 		directoryVBox.getChildren().add(directoryView);
-        Scene directoryScene = new Scene(directoryVBox, 800, 500);
-        stage.setTitle("Virtual Tutoring Room");
-        
-        directoryVBox.setAlignment(Pos.CENTER);
+        Scene directoryScene = new Scene(directoryVBox, 1000, 600);
+        stage.setTitle("Virtual Tutoring");
         
         //directoryViewScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
         
@@ -50,7 +49,7 @@ public class SceneSwitcher extends Pane{
 		roomVBox.setAlignment(Pos.TOP_LEFT);
 		roomVBox.getChildren().add(roomView);
         Scene roomScene = new Scene(roomVBox, 1000, 600);
-        stage.setTitle("Virtual Tutoring Room");
+        stage.setTitle("Virtual Tutoring");
         
         //directoryViewScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
         

@@ -4,9 +4,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class LoginView extends Pane{
@@ -23,9 +26,10 @@ public class LoginView extends Pane{
 	
 	// HBoxes
 	private HBox signInButtonRow;
+	private HBox titleBox;
 	
 	//and a VBox to contain them all
-	private VBox loginRows;
+	private VBox loginBox;
 	
 	public LoginView(Stage stage)
 	{
@@ -47,17 +51,25 @@ public class LoginView extends Pane{
 		
 		signInButtonRow = new HBox();
 		
-		loginRows = new VBox();
+		titleBox = new HBox();
+		
+		loginBox = new VBox();
 	}
 	
 	public void stylizeElements()
 	{
 		title.setAlignment(Pos.CENTER);
-		title.setMinWidth(500);
-		HBox.setMargin(title, new Insets(40, 0, 40, 0));
+		title.setMinWidth(300);
+		HBox.setMargin(title, new Insets(200, 0, 10, 0));
 		
+		//titleBox.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
+		//signInButtonRow.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
+		
+		titleBox.setAlignment(Pos.CENTER);
 		signInButtonRow.setAlignment(Pos.CENTER);
 		HBox.setMargin(signInButton, new Insets(10, 0, 10, 0));
+		
+		loginBox.setAlignment(Pos.CENTER);
 	}
 	
 	public void assignSetOnActions()
@@ -69,8 +81,10 @@ public class LoginView extends Pane{
 	{
 		signInButtonRow.getChildren().add(signInButton);
 		
-		loginRows.getChildren().addAll(title, signInButtonRow);
+		titleBox.getChildren().add(title);
 		
-		this.getChildren().add(loginRows);
+		loginBox.getChildren().addAll(titleBox, signInButtonRow);
+		
+		this.getChildren().addAll(loginBox);
 	}
 }
