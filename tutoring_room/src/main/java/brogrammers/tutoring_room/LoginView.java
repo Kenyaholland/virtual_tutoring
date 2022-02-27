@@ -3,6 +3,8 @@ package brogrammers.tutoring_room;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -10,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class LoginView extends Pane{
@@ -18,17 +21,26 @@ public class LoginView extends Pane{
 	private Stage stage;
 	private SceneSwitcher switcher;
 	
-	//Section for the app title
+	// Labels
 	private Label title;
+	private Label schoolSelection;
 	
-	//one button for signing in, one button for creating account
+	// Buttons
 	private Button signInButton;
+	
+	// DropDown
+	private ComboBox<String> schoolDropDown;
+	
+	// Checkbox
+	private CheckBox isTutor;
 	
 	// HBoxes
 	private HBox signInButtonRow;
 	private HBox titleBox;
+	private HBox tutorBox;
 	
-	//and a VBox to contain them all
+	// VBoxes
+	private VBox selectionBox;
 	private VBox loginBox;
 	
 	public LoginView(Stage stage)
@@ -44,32 +56,61 @@ public class LoginView extends Pane{
 	}
 	
 	public void initializeVariables()
-	{
-		title = new Label("Sign in Page");
+	{	
+		// Labels
+		title = new Label("Virtual Tutoring Room");
+		schoolSelection = new Label("Please select your school to sign in");
 		
+		// Buttons
 		signInButton = new Button("Sign in");
 		
+		// DropDown
+		schoolDropDown = new ComboBox<String>();
+		
+		// CheckBox
+		isTutor = new CheckBox("I am a tutor");
+		
+		// HBox
 		signInButtonRow = new HBox();
-		
 		titleBox = new HBox();
+		tutorBox = new HBox();
 		
+		// VBox
+		selectionBox = new VBox();
 		loginBox = new VBox();
 	}
 	
 	public void stylizeElements()
 	{
+		// Labels
 		title.setAlignment(Pos.CENTER);
-		title.setMinWidth(300);
-		HBox.setMargin(title, new Insets(200, 0, 10, 0));
+		title.setFont(new Font("Arial", 16));
+		HBox.setMargin(title, new Insets(150, 0, 10, 0));
 		
-		//titleBox.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
-		//signInButtonRow.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
+		schoolSelection.setAlignment(Pos.CENTER);
+		schoolSelection.setFont(new Font("Arial", 12));
+		HBox.setMargin(schoolSelection, new Insets(0, 0, 0, 50));
 		
-		titleBox.setAlignment(Pos.CENTER);
+		// CheckBox
+		isTutor.setAlignment(Pos.CENTER);
+		isTutor.setFont(new Font("Arial", 12));
+		HBox.setMargin(isTutor, new Insets(0, 0, 0, 50));
+		
+		// HBoxes
 		signInButtonRow.setAlignment(Pos.CENTER);
 		HBox.setMargin(signInButton, new Insets(10, 0, 10, 0));
 		
+		titleBox.setAlignment(Pos.CENTER);
+		titleBox.setPrefSize(400, 30);
+		
+		tutorBox.setAlignment(Pos.CENTER_LEFT);
+		tutorBox.setPrefSize(400, 20);
+		
+		// VBoxes
+		selectionBox.setAlignment(Pos.CENTER);
+		
 		loginBox.setAlignment(Pos.CENTER);
+		loginBox.setSpacing(10);
 	}
 	
 	public void assignSetOnActions()
@@ -82,9 +123,21 @@ public class LoginView extends Pane{
 	{
 		signInButtonRow.getChildren().add(signInButton);
 		
+		schoolDropDown.getItems().addAll(
+				"Select",
+				"University of West Florida"
+				);
+		schoolDropDown.getSelectionModel().selectFirst();
+		// Should use ComboBox schoolDropDown = new ComboBox(FXCollections.observableArrayList(AllSchools)) if we figure out how to use all universities
+		
+		
 		titleBox.getChildren().add(title);
 		
-		loginBox.getChildren().addAll(titleBox, signInButtonRow);
+		tutorBox.getChildren().add(isTutor);
+		
+		selectionBox.getChildren().addAll(schoolSelection, schoolDropDown);
+		
+		loginBox.getChildren().addAll(titleBox, tutorBox, selectionBox, signInButtonRow);
 		
 		this.getChildren().addAll(loginBox);
 	}
