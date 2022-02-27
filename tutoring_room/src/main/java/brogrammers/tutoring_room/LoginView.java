@@ -75,6 +75,7 @@ public class LoginView extends Pane{
 	public void assignSetOnActions()
 	{
 		signInButton.setOnAction(e -> stage.setScene(switcher.DirectoryScene()));
+		// rooms array is public to be used here to set the label texts
 	}
 	
 	public void populateChildren() 
