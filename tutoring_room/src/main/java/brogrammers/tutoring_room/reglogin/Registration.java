@@ -1,6 +1,8 @@
 package brogrammers.tutoring_room.reglogin;
 
 import java.util.*;
+import java.util.regex.Pattern;
+
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.mail.Session;
@@ -110,7 +112,7 @@ public class Registration
 	{
 		dbo.connectToDatabase();
 		
-		if(dbo.checkExistanceOfUserName(userName))
+		if(dbo.checkExistenceOfUserName(userName))
 		{
 			dbo.closeConnection();
 			
@@ -125,7 +127,7 @@ public class Registration
 	{
 		dbo.connectToDatabase();
 		
-		if(dbo.checkExistanceOfEmail(emailAddress))
+		if(dbo.checkExistenceOfEmail(emailAddress))
 		{
 			dbo.closeConnection();
 			
@@ -137,8 +139,8 @@ public class Registration
 	}
 	
 	public boolean isEmailValid(String emailAddress)
-	{
-		if(emailAddress.contains("@"))
+	{	
+		if(Pattern.matches(".*@.*.edu", emailAddress))
 		{
 			return true;
 		}

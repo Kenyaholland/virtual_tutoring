@@ -26,7 +26,7 @@ public class Login
 		boolean success = false;
 		
 		//Check for existance of username in database
-		if(!(dao.checkExistanceOfUserName(userName)))
+		if(!(dao.checkExistenceOfUserName(userName)))
 		{
 			return false;
 		}

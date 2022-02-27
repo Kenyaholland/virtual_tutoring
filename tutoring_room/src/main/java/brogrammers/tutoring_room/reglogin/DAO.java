@@ -2,10 +2,9 @@ package brogrammers.tutoring_room.reglogin;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-
 /**
  * The Brogrammers 
  * CIS4592 Capstone Project 
@@ -53,19 +52,27 @@ public class DAO
 		return false;
 	}
 	
+	/**
+	 * Inserts a user into the database
+	 * @param user This is the user to be inserted
+	 * @return
+	 */
 	public boolean insertUser(User user)
 	{
 		try 
 		{
-			Statement insert = (Statement) connection.createStatement();
+			String query = "INSERT INTO users " + "VALUES (?, ?, ?, ?, ?)";
 			
-			String query = "INSERT INTO users " + "VALUES ('" + user.getUserName() + "', '" + user.getPassword() + "', '"
-					+ user.getSalt() + "', '" + user.getEmailAddress()
-			+ "', '" + user.getRole() + "')";
+			PreparedStatement insert;
+			insert = connection.prepareStatement(query);
 			
-			System.out.println(query);
+			insert.setString(1, user.getUserName());
+			insert.setString(2, user.getPassword());
+			insert.setString(3, user.getSalt());
+			insert.setString(4, user.getEmailAddress());
+			insert.setString(5, user.getRole());
 			
-			insert.executeUpdate(query);
+			insert.executeUpdate();
 			
 			return true;
 		} 
@@ -77,15 +84,24 @@ public class DAO
 		return false;
 	}
 	
+	/**
+	 * Deletes a user from the database
+	 * @param user This is the user to be deleted
+	 * @return 
+	 */
 	public boolean deleteUser(User user)
 	{
 		try 
 		{
-			Statement insert = (Statement) connection.createStatement();
+			String query = "DELETE FROM users WHERE username=? AND email=?";
 			
-			String query = "DELETE FROM users WHERE username='" + user.getUserName() + "' AND email='" + user.getEmailAddress() + "'";
+			PreparedStatement delete;
+			delete = connection.prepareStatement(query);
 			
-			insert.executeUpdate(query);
+			delete.setString(1, user.getUserName());
+			delete.setString(2, user.getEmailAddress());
+			
+			delete.executeUpdate();
 			
 			return true;
 		} 
@@ -97,15 +113,26 @@ public class DAO
 		return false;
 	}
 	
+	/**
+	 * Updates a users password
+	 * @param user This is the user to be updated
+	 * @param newPassword This is the new password
+	 * @return
+	 */
 	public boolean updatePassword(User user, String newPassword)
 	{
 		try 
 		{
-			Statement update = (Statement) connection.createStatement();
+			String query = "UPDATE users SET password=? WHERE username=? AND email=?";
 			
-			String query = "UPDATE users SET password='" + newPassword + "' WHERE username='" + user.getUserName() + "' AND email='" + user.getEmailAddress() + "'";
+			PreparedStatement update;
+			update = connection.prepareStatement(query);
 			
-			update.executeUpdate(query);
+			update.setString(1, newPassword);
+			update.setString(2, user.getUserName());
+			update.setString(3, user.getEmailAddress());
+			
+			update.executeUpdate();
 			
 			return true;
 		} 
@@ -117,15 +144,23 @@ public class DAO
 		return false;
 	}
 	
-	public boolean checkExistanceOfUserName(String userName)
+	/**
+	 * Checks the database for the existence of a username
+	 * @param userName This is the username to be checked
+	 * @return
+	 */
+	public boolean checkExistenceOfUserName(String userName)
 	{
 		try 
 		{
-			Statement check = (Statement) connection.createStatement();
+			String query = "SELECT * FROM users WHERE username=?";
 			
-			String query = "SELECT * FROM users WHERE username='" + userName + "'";
+			PreparedStatement check;
+			check = connection.prepareStatement(query);
 			
-			ResultSet rs = check.executeQuery(query);
+			check.setString(1, userName);
+			
+			ResultSet rs = check.executeQuery();
 			
 			if(rs.next())
 			{				
@@ -139,15 +174,23 @@ public class DAO
 		return false;
 	}
 	
-	public boolean checkExistanceOfEmail(String emailAddress)
+	/**
+	 * Checks the database for the existence of an email address
+	 * @param emailAddress This is the email to be checked
+	 * @return
+	 */
+	public boolean checkExistenceOfEmail(String emailAddress)
 	{
 		try 
 		{
-			Statement check = (Statement) connection.createStatement();
+			String query = "SELECT * FROM users WHERE email=?";
 			
-			String query = "SELECT * FROM users WHERE email='" + emailAddress + "'";
+			PreparedStatement check;
+			check = connection.prepareStatement(query);
 			
-			ResultSet rs = check.executeQuery(query);
+			check.setString(1, emailAddress);
+			
+			ResultSet rs = check.executeQuery();
 			
 			if(rs.next())
 			{				
@@ -161,13 +204,23 @@ public class DAO
 		return false;
 	}
 	
+	/**
+	 * Returns the salted hash for a user
+	 * @param userName This is the username
+	 * @return
+	 */
 	public String getSaltedHash(String userName)
 	{
 		try
 		{
-			Statement get = connection.createStatement();
-			String query = ("SELECT * FROM users WHERE username='" + userName + "'");
-			ResultSet rs = get.executeQuery(query);
+			String query = "SELECT * FROM users WHERE username=?";
+			
+			PreparedStatement get;
+			get = connection.prepareStatement(query);
+			
+			get.setString(1, userName);
+			
+			ResultSet rs = get.executeQuery();
 		
 			if(rs.next()) 
 			{ 
@@ -183,13 +236,23 @@ public class DAO
 		return null;
 	}
 	
+	/**
+	 * Returns the salt for a user
+	 * @param userName This is the username
+	 * @return 
+	 */
 	public String getSalt(String userName)
 	{
 		try
 		{
-			Statement get = connection.createStatement();
-			String query = ("SELECT * FROM users WHERE username='" + userName + "'");
-			ResultSet rs = get.executeQuery(query);
+			String query = "SELECT * FROM users WHERE username=?";
+			
+			PreparedStatement get;
+			get = connection.prepareStatement(query);
+			
+			get.setString(1, userName);
+			
+			ResultSet rs = get.executeQuery();
 		
 			if(rs.next()) 
 			{ 
