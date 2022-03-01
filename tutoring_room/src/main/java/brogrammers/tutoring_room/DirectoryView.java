@@ -22,8 +22,8 @@ public class DirectoryView extends Pane{
 	private Stage stage;
 	private SceneSwitcher switcher;
 	
-	// ArrayList for storing and accessing separate rooms
-	public ArrayList<VBox> rooms;
+	// ArrayList for storing and accessing room VBoxes
+	private ArrayList<VBox> roomVBoxes;
 	
 	// Labels
 	private Label titleLabel;
@@ -43,12 +43,12 @@ public class DirectoryView extends Pane{
 	private VBox directoryBox;
 	
 	
-	public DirectoryView(Stage stage)
+	public DirectoryView(Stage stage, SceneSwitcher switcher)
 	{
 		this.stage = stage;
-		this.switcher = new SceneSwitcher(stage);
+		this.switcher = switcher;
 
-		this.rooms = new ArrayList<VBox>();
+		this.roomVBoxes = new ArrayList<VBox>();
 		
 		initializeVariables();
 		stylizeElements();
@@ -102,12 +102,12 @@ public class DirectoryView extends Pane{
 			buildRoom(i);
 		}
 		
-		roomsGrid.add(rooms.get(0), 0, 0);
-		roomsGrid.add(rooms.get(1), 1, 0);
-		roomsGrid.add(rooms.get(2), 2, 0);
-		roomsGrid.add(rooms.get(3), 0, 1);
-		roomsGrid.add(rooms.get(4), 1, 1);
-		roomsGrid.add(rooms.get(5), 2, 1);
+		roomsGrid.add(roomVBoxes.get(0), 0, 0);
+		roomsGrid.add(roomVBoxes.get(1), 1, 0);
+		roomsGrid.add(roomVBoxes.get(2), 2, 0);
+		roomsGrid.add(roomVBoxes.get(3), 0, 1);
+		roomsGrid.add(roomVBoxes.get(4), 1, 1);
+		roomsGrid.add(roomVBoxes.get(5), 2, 1);
 		
 		directoryBox.getChildren().addAll(headerRow, roomsGrid);
 		
@@ -154,7 +154,7 @@ public class DirectoryView extends Pane{
 		Button roomButton = new Button("Join");
 		HBox.setMargin(roomButton, new Insets(10, 10, 10, 0));
 		// TO-DO: Switch to unique room scenes
-		roomButton.setOnAction(e -> stage.setScene(switcher.RoomScene()));
+		roomButton.setOnAction(e -> stage.setScene(switcher.RoomScene(roomNum)));
 		
 		HBox roomHeaderBox = new HBox();
 		roomHeaderBox.setPrefSize(333.3, 20);
@@ -214,6 +214,6 @@ public class DirectoryView extends Pane{
 		
 		roomBox.getChildren().addAll(roomHeaderBox, statusRow, tutorRow, coursesRow, studentsRow);
 		
-		rooms.add(roomBox);
+		roomVBoxes.add(roomBox);
 	}
 }
