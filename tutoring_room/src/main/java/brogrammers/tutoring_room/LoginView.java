@@ -43,10 +43,10 @@ public class LoginView extends Pane{
 	private VBox selectionBox;
 	private VBox loginBox;
 	
-	public LoginView(Stage stage)
+	public LoginView(Stage stage, SceneSwitcher switcher)
 	{
 		this.stage = stage;
-		this.switcher = new SceneSwitcher(stage);
+		this.switcher = switcher;
 
 		initializeVariables();
 		stylizeElements();
@@ -116,7 +116,7 @@ public class LoginView extends Pane{
 	public void assignSetOnActions()
 	{
 		signInButton.setOnAction(e -> stage.setScene(switcher.DirectoryScene()));
-		// rooms array is public to be used here to set the label texts
+		// rooms array from SceneSwitcher is public to be used here to set the label texts
 	}
 	
 	public void populateChildren() 

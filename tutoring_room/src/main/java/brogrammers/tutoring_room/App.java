@@ -13,6 +13,7 @@ public class App extends Application {
     public void start(Stage stage) {
 
     	SceneSwitcher switcher = new SceneSwitcher(stage);
+    	switcher.makeRooms();
    
     	stage.setScene(switcher.LoginScene());
     	stage.centerOnScreen();

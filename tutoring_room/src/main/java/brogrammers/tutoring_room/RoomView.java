@@ -48,10 +48,10 @@ public class RoomView extends Pane{
 	
 	//Image raiseHandIcon;
 	
-	public RoomView(Stage stage)
+	public RoomView(Stage stage, SceneSwitcher switcher)
 	{
 		this.stage = stage;
-		this.switcher = new SceneSwitcher(stage);
+		this.switcher = switcher;
 
 		initializeVariables();
 		stylizeElements();
