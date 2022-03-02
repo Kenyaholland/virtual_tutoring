@@ -14,6 +14,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class RoomView extends Pane{
 	
@@ -46,7 +47,8 @@ public class RoomView extends Pane{
 	private HBox breakoutRoomsBox;
 	private VBox tutorRoomBox;
 	
-	//Image raiseHandIcon;
+	//Image blankIcon = new Image(getClass().getResourceAsStream("/main/java/brogrammers/tutoring_room/white_square.png"));
+	//Image raiseHandIcon = new Image(getClass().getResourceAsStream("/main/java/brogrammers/tutoring_room/raisedHand.jpg"));
 	
 	public RoomView(Stage stage, SceneSwitcher switcher)
 	{
@@ -94,7 +96,7 @@ public class RoomView extends Pane{
 		stylizeMiddleBox();
 		stylizeBreakoutRoomsBox();
 		
-		// Stylize room VBox
+		// Stylize entire room VBox
 		tutorRoomBox.setAlignment(Pos.TOP_LEFT);
 		tutorRoomBox.setSpacing(25);
 	}
@@ -138,11 +140,11 @@ public class RoomView extends Pane{
 				
 		// Stylize header boxes
 		titleBox.setPrefWidth(200);
-		titleBox.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
+		//titleBox.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
 		titleBox.setAlignment(Pos.CENTER_LEFT);
 		titleBox.setTranslateX(10);
 				
-		headerButtonBox.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
+		//headerButtonBox.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
 		headerButtonBox.setAlignment(Pos.CENTER_RIGHT);
 		headerButtonBox.setTranslateX(550);
 		headerButtonBox.setSpacing(10);
@@ -157,7 +159,7 @@ public class RoomView extends Pane{
 	private void stylizeMiddleBox()
 	{
 		tutorBoxLabel.setPrefSize(270, 30);
-		tutorBoxLabel.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
+		//tutorBoxLabel.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
 		tutorBoxLabel.setFont(new Font("Arial", 14));
 		tutorBoxLabel.setPadding(new Insets(0, 10, 0, 10));
 		
@@ -165,7 +167,7 @@ public class RoomView extends Pane{
 		tutorNameLabel.setText("Tutor Name");
 		tutorNameLabel.setPrefSize(150, 20);
 		tutorNameLabel.setFont(new Font("Arial", 12));
-		tutorNameLabel.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
+		//tutorNameLabel.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
 		tutorNameLabel.setAlignment(Pos.CENTER);
 		
 		tutorZoomButton.setPrefSize(130, 20);
@@ -175,7 +177,7 @@ public class RoomView extends Pane{
 		coursesText.setFont(new Font("Arial", 12));
 		
 		coursesTextBox.setPrefSize(240, 50);
-		coursesTextBox.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
+		//coursesTextBox.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
 		coursesTextBox.setAlignment(Pos.TOP_LEFT);
 		coursesTextBox.setPadding(new Insets(0, 20, 0, 20));
 		coursesTextBox.getChildren().add(coursesText);
@@ -183,23 +185,33 @@ public class RoomView extends Pane{
 		statusLabel.setText("Status: <status>");
 		statusLabel.setPrefSize(200, 20);
 		statusLabel.setFont(new Font("Arial", 12));
-		statusLabel.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
+		//statusLabel.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
 		statusLabel.setAlignment(Pos.CENTER);
 		
 		tutorInfoBox.setPrefSize(270, 300);
-		tutorInfoBox.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
+		//tutorInfoBox.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
 		tutorInfoBox.setTranslateX(25);
 		tutorInfoBox.setAlignment(Pos.TOP_CENTER);
 		tutorInfoBox.setSpacing(25);
+		tutorInfoBox.setStyle("-fx-padding: 10;" + 
+                "-fx-border-style: solid inside;" + 
+                "-fx-border-width: 2;" + 
+                "-fx-border-radius: 2;" + 
+                "-fx-border-color: black;");
 		
-		tutorInfoBox.getChildren().addAll(tutorBoxLabel, tutorZoomButton, tutorNameLabel, coursesTextBox, statusLabel);
+		tutorInfoBox.getChildren().addAll(tutorBoxLabel, tutorNameLabel, coursesTextBox, statusLabel, tutorZoomButton);
 		
 		chatPane.setPrefSize(650, 300);
 		chatPane.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
 		chatPane.setTranslateX(30);
+		chatPane.setStyle("-fx-padding: 10;" + 
+                "-fx-border-style: solid inside;" + 
+                "-fx-border-width: 2;" + 
+                "-fx-border-radius: 2;" + 
+                "-fx-border-color: black;");
 		
 		middleBox.setPrefSize(1000, 300);
-		middleBox.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
+		//middleBox.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
 		middleBox.setAlignment(Pos.TOP_LEFT);
 		middleBox.setSpacing(25);
 		//middleBox.setPadding(new Insets(0, 25, 0, 25));
@@ -208,7 +220,7 @@ public class RoomView extends Pane{
 	private void stylizeBreakoutRoomsBox()
 	{
 		breakoutRoomsBox.setPrefSize(1000, 185);
-		breakoutRoomsBox.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
+		//breakoutRoomsBox.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, null, null)));
 		breakoutRoomsBox.setAlignment(Pos.CENTER_LEFT);
 		breakoutRoomsBox.setSpacing(25);
 		breakoutRoomsBox.setPadding(new Insets(0, 25, 0, 25));
@@ -219,9 +231,11 @@ public class RoomView extends Pane{
 		VBox box = new VBox();
 		
 		Label breakoutRoomLabel = new Label("Group " + index);
+//		ImageView handIV = new ImageView(blankIcon);
+//		breakoutRoomLabel.setGraphic(handIV);
 		breakoutRoomLabel.setPrefSize(220, 30);
 		breakoutRoomLabel.setFont(new Font("Arial", 12));
-		breakoutRoomLabel.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
+		//breakoutRoomLabel.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
 		breakoutRoomLabel.setPadding(new Insets(0, 10, 0, 10));
 		
 		Button zoomButton = new Button("Enter Zoom Room");
@@ -233,16 +247,21 @@ public class RoomView extends Pane{
 		
 		HBox studentsTextBox = new HBox();
 		studentsTextBox.setPrefSize(160, 90);
-		studentsTextBox.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
+		//studentsTextBox.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
 		studentsTextBox.setAlignment(Pos.TOP_LEFT);
 		studentsTextBox.setPadding(new Insets(0, 10, 0, 10));
 		
 		studentsTextBox.getChildren().add(studentsText);
 		
 		box.setPrefSize(220, 185);
-		box.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
+		//box.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
 		box.setAlignment(Pos.TOP_LEFT);
 		box.setSpacing(15);
+		box.setStyle("-fx-padding: 10;" + 
+                "-fx-border-style: solid inside;" + 
+                "-fx-border-width: 2;" + 
+                "-fx-border-radius: 2;" + 
+                "-fx-border-color: black;");
 		
 		//breakoutRoom.setGraphic(new ImageView(blank white image initially))
 		//studentsText.setText -> String of names from ResultSet of query for students in room [i]

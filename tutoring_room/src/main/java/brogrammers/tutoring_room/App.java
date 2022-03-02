@@ -16,12 +16,15 @@ public class App extends Application {
     	switcher.makeRooms();
    
     	stage.setScene(switcher.LoginScene());
-    	stage.centerOnScreen();
+    	stage.setX(50);
+    	stage.setY(25);
+    	//stage.centerOnScreen();
         stage.show();
         
     }
 
     public static void main(String[] args) {
+    	jdbcDao dao = new jdbcDao();
         launch();
     }
 
