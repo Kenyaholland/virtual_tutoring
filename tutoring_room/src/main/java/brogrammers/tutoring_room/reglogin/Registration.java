@@ -148,7 +148,7 @@ public class Registration
 		return false;
 	}
 	
-	public void sendVerificationCode(String emailAddress)
+	public void sendVerificationCode(String emailAddress, String username)
 	{
 		String sender = "TheBrogrammers.VirtualTutoring@gmail.com";
 		String host = "smtp.gmail.com";
@@ -169,7 +169,7 @@ public class Registration
 	    
 	    this.code = sh.getRandomVerificationCode();
 	    
-	    String msg = "Hey, " + userName + "!\n\nWelcome to Virtual Tutoring by The Brogrammers. In order to verify your new account, please enter the"
+	    String msg = "Hey, " + username + "!\n\nWelcome to Virtual Tutoring by The Brogrammers. In order to verify your new account, please enter the"
 	    		+ " verification code below:\n\n" + code + "\n\nIf you were not the one who registered for an account then you can just"
 	    				+ " ignore this email. Otherwise, we look forward to seeing you soon. Happy learning!";
 	      

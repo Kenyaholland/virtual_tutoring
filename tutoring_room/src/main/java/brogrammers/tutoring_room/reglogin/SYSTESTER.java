@@ -96,7 +96,7 @@ public class SYSTESTER
 			return;
 		}
 		
-		register.sendVerificationCode(email);
+		register.sendVerificationCode(email, username);
 		
 		System.out.println("A verification code has been sent to your email. Enter the code below:");
 		String code = in.next();

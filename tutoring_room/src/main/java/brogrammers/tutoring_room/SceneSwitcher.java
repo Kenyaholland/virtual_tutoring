@@ -13,13 +13,18 @@ public class SceneSwitcher extends Pane{
 		this.stage = stage;
 	}
 	
+	public void switchScene(Scene scene)
+	{
+		stage.setScene(scene);
+	}
+	
 	public Scene LoginScene() {
 		VBox loginVBox = new VBox();
-    	LoginView loginView = new LoginView(this.stage);
+    	LoginView loginView = new LoginView(stage, this);
     	stage.setTitle("Sign in");
     	
     	loginVBox.getChildren().add(loginView);
-        Scene loginScene = new Scene(loginVBox, 800, 500);
+        Scene loginScene = new Scene(loginVBox, 1000, 500);
         
         loginVBox.setAlignment(Pos.CENTER);
         
@@ -30,10 +35,10 @@ public class SceneSwitcher extends Pane{
 
 	public Scene DirectoryScene() {
 		VBox directoryVBox = new VBox();
-		DirectoryView directoryView = new DirectoryView(this.stage);
+		DirectoryView directoryView = new DirectoryView(stage, this);
 
 		directoryVBox.getChildren().add(directoryView);
-        Scene directoryScene = new Scene(directoryVBox, 800, 500);
+        Scene directoryScene = new Scene(directoryVBox, 1000, 500);
         stage.setTitle("Virtual Tutoring Room");
         
         directoryVBox.setAlignment(Pos.CENTER);
@@ -45,10 +50,10 @@ public class SceneSwitcher extends Pane{
 	
 	public Scene RoomScene() {
 		VBox roomVBox = new VBox();
-		RoomView roomView = new RoomView(this.stage);
+		RoomView roomView = new RoomView(stage, this);
 
 		roomVBox.getChildren().add(roomView);
-        Scene roomScene = new Scene(roomVBox, 800, 500);
+        Scene roomScene = new Scene(roomVBox, 1000, 500);
         stage.setTitle("Virtual Tutoring Room");
         
         roomVBox.setAlignment(Pos.CENTER);
