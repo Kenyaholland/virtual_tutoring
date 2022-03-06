@@ -16,6 +16,8 @@ public class App extends Application
     	SceneSwitcher switcher = new SceneSwitcher(stage);
     	   
     	stage.setScene(switcher.LoginScene());
+    	stage.setX(200);
+    	stage.setY(100);
         stage.show();
     }
 

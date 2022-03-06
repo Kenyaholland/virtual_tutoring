@@ -80,7 +80,7 @@ public class LoginCredentialsView
     	root.getChildren().add(register);
     	
     	login.setOnAction(e -> getCredentials(username_field, password_field));
-    	register.setOnAction(e -> switcher.switchScene(new RegistrationView(stage, switcher).getScene()));
+    	register.setOnAction(e -> stage.setScene(switcher.RegistrationScene()));
     	
     	scene = new Scene(root, 1000, 500);
     }
@@ -104,8 +104,7 @@ public class LoginCredentialsView
     	if(login.login(username, password))
     	{
     		alert.setContentText("You have been successfully authenticated.");
-    		Scene scene = switcher.DirectoryScene();
-    		switcher.switchScene(scene);
+    		stage.setScene(switcher.DirectoryScene());
     	}
     	else
     	{
