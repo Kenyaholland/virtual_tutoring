@@ -6,10 +6,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -151,7 +154,7 @@ public class DirectoryView extends Pane{
 		Button roomButton = new Button("Join");
 		HBox.setMargin(roomButton, new Insets(10, 10, 10, 0));
 		// TO-DO: Switch to unique room scenes
-		roomButton.setOnAction(e -> stage.setScene(switcher.RoomScene()));
+		roomButton.setOnAction(e -> stage.setScene(switcher.RoomScene(roomNum)));
 		
 		HBox roomHeaderBox = new HBox();
 		roomHeaderBox.setPrefSize(333.3, 20);
