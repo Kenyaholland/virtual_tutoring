@@ -21,6 +21,7 @@ public class RoomView extends Pane{
 	// For switching scenes
 	private Stage stage;
 	private SceneSwitcher switcher;
+	private int roomNum;
 	
 	// Labels
 	private Label titleLabel;
@@ -50,10 +51,11 @@ public class RoomView extends Pane{
 	//Image blankIcon = new Image(getClass().getResourceAsStream("/main/java/brogrammers/tutoring_room/white_square.png"));
 	//Image raiseHandIcon = new Image(getClass().getResourceAsStream("/main/java/brogrammers/tutoring_room/raisedHand.jpg"));
 	
-	public RoomView(Stage stage, SceneSwitcher switcher)
+	public RoomView(Stage stage, SceneSwitcher switcher, int roomNum)
 	{
 		this.stage = stage;
 		this.switcher = switcher;
+		this.roomNum = roomNum;
 
 		initializeVariables();
 		stylizeElements();
@@ -65,7 +67,7 @@ public class RoomView extends Pane{
 	public void initializeVariables()
 	{
 		// Header components
-		titleLabel = new Label("Tutoring Room <room #>");
+		titleLabel = new Label("Tutoring Room " + this.roomNum);
 		directoryButton = new Button("Return to Directory");
 		titleBox = new HBox();
 		headerButtonBox = new HBox();

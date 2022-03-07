@@ -2,10 +2,12 @@ package brogrammers.tutoring_room;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -112,7 +114,18 @@ public class LoginView extends Pane{
 	
 	public void assignSetOnActions()
 	{
-		signInButton.setOnAction(e -> stage.setScene(switcher.LoginCredentialsScene()));
+		signInButton.setOnAction(e -> { 
+			if(schoolDropDown.getValue() ==  "Select") {
+				Alert alert = new Alert(AlertType.ERROR);
+		    	alert.setTitle("Login Alert");
+		    	alert.setHeaderText("Login Error");
+		    	alert.setContentText("Must select a University from the drop-down menu.");
+		    	alert.showAndWait();
+			}
+			else {
+				stage.setScene(switcher.LoginCredentialsScene());
+			}
+		});
 		// rooms array from SceneSwitcher is public to be used here to set the label texts
 	}
 	

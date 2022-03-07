@@ -29,6 +29,7 @@ public class DirectoryView extends Pane{
 	private Label titleLabel;
 	
 	// Buttons
+	private Button refreshButton;
 	private Button logoutButton;
 	
 	// HBoxes
@@ -63,6 +64,7 @@ public class DirectoryView extends Pane{
 		titleLabel = new Label("Virtual Tutoring Directory");
 		
 		// Buttons
+		refreshButton = new Button("Refresh");
 		logoutButton = new Button("Logout");
 		
 		// HBoxes
@@ -88,13 +90,14 @@ public class DirectoryView extends Pane{
 	
 	public void assignSetOnActions()
 	{
+		//refreshButton.setOnAction(e -> ); // refresh page
 		logoutButton.setOnAction(e -> stage.setScene(switcher.LoginScene()));
 	}
 	
 	public void populateChildren() 
 	{
 		titleBox.getChildren().add(titleLabel);
-		headerButtonBox.getChildren().add(logoutButton);
+		headerButtonBox.getChildren().addAll(refreshButton, logoutButton);
 		
 		headerRow.getChildren().addAll(titleBox, headerButtonBox);
 		
@@ -121,6 +124,9 @@ public class DirectoryView extends Pane{
 		titleLabel.setTranslateX(10);
 				
 		// Style buttons
+		refreshButton.setPrefSize(80, 10);
+		refreshButton.setFont(new Font("Arial", 10));
+		
 		logoutButton.setPrefSize(80, 10);
 		logoutButton.setFont(new Font("Arial", 10));
 				
@@ -130,7 +136,8 @@ public class DirectoryView extends Pane{
 		titleBox.setTranslateX(10);
 				
 		headerButtonBox.setAlignment(Pos.CENTER_RIGHT);
-		headerButtonBox.setTranslateX(700);
+		headerButtonBox.setSpacing(10);
+		headerButtonBox.setTranslateX(600);
 				
 		// Style header
 		headerRow.setPrefSize(1000, 30);
