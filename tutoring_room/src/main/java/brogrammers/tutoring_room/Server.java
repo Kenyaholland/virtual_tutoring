@@ -122,8 +122,8 @@ public class Server {
 		}
 	}
 	
-	//public static void main(String[] args) {
-		//Server server = new Server(55555);
-		//server.start();
-	//}
+	public static void main(String[] args) {
+		Server server = new Server(55555);
+		server.start();
+	}
 }
