@@ -21,7 +21,7 @@ public class SceneSwitcher extends Pane{
 	
 	public void makeRooms() {
 		for(int i = 0; i < 6; i++) {
-			RoomView roomView = new RoomView(stage, this);
+			RoomView roomView = new RoomView(stage, this, i + 1);
 			rooms.add(roomView);
 		}
 	}

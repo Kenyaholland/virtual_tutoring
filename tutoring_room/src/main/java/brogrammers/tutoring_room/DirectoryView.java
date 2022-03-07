@@ -90,6 +90,7 @@ public class DirectoryView extends Pane{
 	
 	public void assignSetOnActions()
 	{
+		//refreshButton.setOnAction(e -> ); // refresh page
 		logoutButton.setOnAction(e -> stage.setScene(switcher.LoginScene()));
 	}
 	
