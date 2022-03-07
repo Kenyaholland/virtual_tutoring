@@ -39,6 +39,28 @@ public class SceneSwitcher extends Pane{
 
         return loginScene;
 	}
+	
+	public Scene LoginCredentialsScene() {
+    	LoginCredentialsView loginCredView = new LoginCredentialsView(stage, this);
+    	stage.setTitle("Sign in");
+ 
+        Scene loginCredScene = loginCredView.getScene();
+        
+        //loginCredScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
+
+        return loginCredScene;
+	}
+	
+	public Scene RegistrationScene() {
+    	RegistrationView regView = new RegistrationView(stage, this);
+    	stage.setTitle("Sign in");
+ 
+        Scene regScene = regView.getScene();
+        
+        //loginCredScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
+
+        return regScene;
+	}
 
 	public Scene DirectoryScene() {
 		VBox directoryVBox = new VBox();

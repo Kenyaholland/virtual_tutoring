@@ -6,12 +6,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -115,7 +112,7 @@ public class LoginView extends Pane{
 	
 	public void assignSetOnActions()
 	{
-		signInButton.setOnAction(e -> stage.setScene(switcher.DirectoryScene()));
+		signInButton.setOnAction(e -> stage.setScene(switcher.LoginCredentialsScene()));
 		// rooms array from SceneSwitcher is public to be used here to set the label texts
 	}
 	
