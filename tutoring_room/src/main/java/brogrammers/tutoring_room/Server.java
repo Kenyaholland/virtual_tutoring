@@ -30,7 +30,7 @@ public class Server {
 				System.out.println("waiting for connections");
 				
 				Socket socket = serverSocket.accept();
-				System.out.println("incoming connection accepted");
+				System.out.println("user connected");
 				
 				ClientHandler clientHandler = new ClientHandler(socket);		
 				Thread thread = new Thread(clientHandler);
@@ -65,7 +65,6 @@ public class Server {
 				this.socket = socket;
 				bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-				username = bufferedReader.readLine();
 			} catch (IOException e) {
 				e.printStackTrace();
 				close();
@@ -74,22 +73,30 @@ public class Server {
 
 		@Override
 		public void run() {
-			clientHandlers.add(this);
-			broadcast(username + " connected");
-			
-			String message;
-			while (socket.isConnected()) {
-				try {
-					message = bufferedReader.readLine();
-					broadcast(message);
-				} catch (IOException e) {
-					break;
+			try {
+				username = bufferedReader.readLine();
+				
+				broadcast(username + " connected");
+				clientHandlers.add(this);
+				
+				String message;
+				while (socket.isConnected()) {
+					try {
+						message = bufferedReader.readLine();
+						broadcast(username + ": " + message);
+					} catch (IOException e) {
+						break;
+					}
 				}
+				clientHandlers.remove(this);
+				broadcast(username + " disconnected");	
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				System.out.println("user disconnected");
+				close();	
 			}
-			
-			clientHandlers.remove(this);
-			broadcast(username + " disconnected");
-			close();	
 		}
 		
 		public void broadcast(String message) {
