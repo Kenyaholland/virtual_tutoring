@@ -61,7 +61,7 @@ public class DAO
 	{
 		try 
 		{
-			String query = "INSERT INTO users " + "VALUES (?, ?, ?, ?, ?)";
+			String query = "INSERT INTO users " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 			
 			PreparedStatement insert;
 			insert = connection.prepareStatement(query);
@@ -71,6 +71,9 @@ public class DAO
 			insert.setString(3, user.getSalt());
 			insert.setString(4, user.getEmailAddress());
 			insert.setString(5, user.getRole());
+			insert.setString(6, null);
+			insert.setString(7, null);
+			insert.setString(8, null);
 			
 			insert.executeUpdate();
 			
