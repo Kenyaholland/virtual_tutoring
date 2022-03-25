@@ -93,6 +93,8 @@ public class SceneSwitcher extends Pane{
         
         //directoryViewScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
         
+        this.client.launchTextChat(this.client, rooms.get(roomNum - 1));
+        
         return roomScene;
 	}
 }

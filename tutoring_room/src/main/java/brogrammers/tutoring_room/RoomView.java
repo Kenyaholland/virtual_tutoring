@@ -1,5 +1,7 @@
 package brogrammers.tutoring_room;
 
+import java.util.Scanner;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -27,6 +29,7 @@ public class RoomView extends Pane{
 	private Stage stage;
 	private SceneSwitcher switcher;
 	private int roomNum;
+	private Scanner scanner;
 	
 	// Labels
 	private Label titleLabel;
@@ -74,6 +77,8 @@ public class RoomView extends Pane{
 		this.stage = stage;
 		this.switcher = switcher;
 		this.roomNum = roomNum;
+		
+		scanner = new Scanner(System.in);
 
 		initializeVariables();
 		stylizeElements();
@@ -135,20 +140,20 @@ public class RoomView extends Pane{
 		//zoomButton.setOnAction(e -> {});
 		
 		messageField.setOnKeyPressed(event -> {
-			String s = "";
+			String message = "";
             if (event.getCode() == KeyCode.ENTER) {
-                s = messageField.getText() + "\n";
+    			message = messageField.getText() + "\n";
                 messageField.setText("");
-                displayChats.appendText(s);
+                switcher.getClient().send(message);
             }
         });
 
-		sendChatButton.setOnAction((event) -> {
-			String s = "";
-            s = messageField.getText() + "\n";
-            messageField.setText("");
-            displayChats.appendText(s);
-        });
+		//sendChatButton.setOnAction((event) -> {
+			//String message = "";
+			//message = messageField.getText() + "\n";
+            //messageField.setText("");
+            //switcher.getClient().send(message);
+        //});
     }
 	
 	public void populateChildren() 
@@ -329,5 +334,9 @@ public class RoomView extends Pane{
 			
 		box.getChildren().addAll(breakoutRoomLabel, zoomButton, studentsTextBox);
 		return box;
+	}
+	
+	public TextArea getDisplayChats() {
+		return displayChats;
 	}
 }

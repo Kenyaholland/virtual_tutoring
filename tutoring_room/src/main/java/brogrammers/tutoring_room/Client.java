@@ -13,6 +13,7 @@ public class Client {
 	private Socket socket;
 	private BufferedReader bufferedReader;
 	private BufferedWriter bufferedWriter;
+	private String username;
 	
 	public Client(String address, int port) {
 		try {
@@ -51,6 +52,14 @@ public class Client {
 		return socket;
 	}
 	
+	public String getUsername() {
+		return username;
+	}
+	
+	public void setUsername(String name) {
+		username = name;
+	}
+	
 	public void close() {
 		try {
 			if (bufferedReader != null) {
@@ -67,10 +76,7 @@ public class Client {
 		}
 	}
 	
-	public void launchTextChat(Client client) {
-				
-		//	get our client's user-name
-		Scanner scanner = new Scanner(System.in); 
+	public void launchTextChat(Client client, RoomView room) {
 		
 		// print incoming messages (threaded so we are not blocked)
 		// for app gui, we will need to print incoming messages to a 'textbox'
@@ -80,7 +86,8 @@ public class Client {
 				String message;
 				while (client.getSocket().isConnected()) {
 					if (!(message = client.receive()).equals("")) {
-						System.out.println(message);
+						//System.out.println(message);
+						room.getDisplayChats().appendText(message + "\n");
 					}
 				}
 			}
@@ -94,6 +101,5 @@ public class Client {
 				//client.send(message);
 			//}
 		//}
-		scanner.close();
 	}
 }
