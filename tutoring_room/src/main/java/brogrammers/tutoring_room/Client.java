@@ -88,12 +88,12 @@ public class Client {
 		
 		// send console input
 		// for app gui, we will need to receive input from a 'textbox'
-		//String message;
-		//while (client.getSocket().isConnected()) {
-			//if (!(message = scanner.nextLine()).equals("")) {
-				//client.send(message);
-			//}
-		//}
+		String message;
+		while (client.getSocket().isConnected()) {
+			if (!(message = scanner.nextLine()).equals("")) {
+				client.send(message);
+			}
+		}
 		scanner.close();
 	}
 }

@@ -91,8 +91,6 @@ public class SceneSwitcher extends Pane{
         Scene roomScene = new Scene(roomVBox, 1000, 600);
         stage.setTitle("Virtual Tutoring");
         
-        this.client.launchTextChat(this.client);
-        
         //directoryViewScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
         
         return roomScene;
