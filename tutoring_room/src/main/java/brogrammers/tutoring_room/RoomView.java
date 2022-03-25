@@ -148,12 +148,12 @@ public class RoomView extends Pane{
             }
         });
 
-		//sendChatButton.setOnAction((event) -> {
-			//String message = "";
-			//message = messageField.getText() + "\n";
-            //messageField.setText("");
-            //switcher.getClient().send(message);
-        //});
+		sendChatButton.setOnAction((event) -> {
+			String message = "";
+			message = messageField.getText() + "\n";
+            messageField.setText("");
+            switcher.getClient().send(message);
+        });
     }
 	
 	public void populateChildren() 
