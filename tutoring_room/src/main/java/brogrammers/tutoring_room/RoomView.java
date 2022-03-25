@@ -4,8 +4,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -15,6 +19,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 
 public class RoomView extends Pane{
 	
@@ -32,10 +37,20 @@ public class RoomView extends Pane{
 	// Text
 	private Text coursesText;
 	
+	// TextField
+	private TextField messageField;
+	
+	// Text Area
+	TextArea displayChats;
+	
 	// Buttons
 	private Button directoryButton;
 	private Button logoutButton;
 	private Button tutorZoomButton;
+	private Button sendChatButton;
+	
+	// ScrollPane
+	ScrollPane chatWindow;
 	
 	// Boxes
 	private HBox headerBox;
@@ -43,7 +58,10 @@ public class RoomView extends Pane{
 	private HBox headerButtonBox;
 	private VBox tutorInfoBox;
 	private HBox coursesTextBox;
-	private Pane chatPane;
+	private VBox chatBox;
+	private VBox createMessageBox;
+	private VBox sendMessageBox;
+	private GridPane chatPane;
 	private HBox middleBox;
 	private HBox breakoutRoomsBox;
 	private VBox tutorRoomBox;
@@ -80,9 +98,16 @@ public class RoomView extends Pane{
 		tutorNameLabel = new Label();
 		statusLabel = new Label();
 		coursesText = new Text();
+		messageField = new TextField();
+		sendChatButton = new Button("Send");
+		displayChats = new TextArea();
+		chatWindow = new ScrollPane();
+		chatBox = new VBox();
+		createMessageBox = new VBox();
+		sendMessageBox = new VBox();
 		coursesTextBox = new HBox();
 		tutorInfoBox = new VBox();
-		chatPane = new Pane();
+		chatPane = new GridPane();
 		middleBox = new HBox();
 		
 		// Break-out rooms components
@@ -108,7 +133,23 @@ public class RoomView extends Pane{
 		directoryButton.setOnAction(e -> stage.setScene(switcher.DirectoryScene()));
 		logoutButton.setOnAction(e -> stage.setScene(switcher.LoginScene()));
 		//zoomButton.setOnAction(e -> {});
-	}
+		
+		messageField.setOnKeyPressed(event -> {
+			String s = "";
+            if (event.getCode() == KeyCode.ENTER) {
+                s = messageField.getText() + "\n";
+                messageField.setText("");
+                displayChats.appendText(s);
+            }
+        });
+
+		sendChatButton.setOnAction((event) -> {
+			String s = "";
+            s = messageField.getText() + "\n";
+            messageField.setText("");
+            displayChats.appendText(s);
+        });
+    }
 	
 	public void populateChildren() 
 	{
@@ -203,9 +244,26 @@ public class RoomView extends Pane{
 		
 		tutorInfoBox.getChildren().addAll(tutorBoxLabel, tutorNameLabel, coursesTextBox, statusLabel, tutorZoomButton);
 		
+		messageField.setEditable(true);
+		messageField.setPrefWidth(525);
+		displayChats.setPrefHeight(250);
+		displayChats.setEditable(false);
+		chatWindow.setContent(displayChats);
+		chatWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        displayChats.setPrefWidth(525);
+		
+        chatBox.setPadding(new Insets(10, 10, 10, 10));
+        chatBox.getChildren().add(displayChats);
+		createMessageBox.setPadding(new Insets(10, 10, 10, 10));
+		createMessageBox.getChildren().add(messageField);
+		sendMessageBox.setPadding(new Insets(10, 10, 10, 10));
+		sendMessageBox.getChildren().add(sendChatButton);
+        
 		chatPane.setPrefSize(650, 300);
-		chatPane.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
 		chatPane.setTranslateX(30);
+		chatPane.add(chatBox, 0, 0);
+		chatPane.add(createMessageBox, 0, 1);
+		chatPane.add(sendMessageBox, 1, 1);
 		chatPane.setStyle("-fx-padding: 10;" + 
                 "-fx-border-style: solid inside;" + 
                 "-fx-border-width: 2;" + 
