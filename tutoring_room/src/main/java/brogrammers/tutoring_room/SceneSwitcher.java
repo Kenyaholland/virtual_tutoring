@@ -11,12 +11,14 @@ import javafx.stage.Stage;
 
 public class SceneSwitcher extends Pane{
 	private Stage stage;
+	private Client client;
 	
 	public ArrayList<RoomView> rooms;
 	
 	public SceneSwitcher(Stage stage) {
 		this.stage = stage;
 		rooms = new ArrayList<RoomView>();
+		this.client = new Client("localhost", 55555);
 	}
 	
 	public void makeRooms() {
@@ -24,6 +26,10 @@ public class SceneSwitcher extends Pane{
 			RoomView roomView = new RoomView(stage, this, i + 1);
 			rooms.add(roomView);
 		}
+	}
+	
+	public Client getClient() {
+		return this.client;
 	}
 	
 	public Scene LoginScene() {
@@ -84,6 +90,8 @@ public class SceneSwitcher extends Pane{
 		roomVBox.getChildren().add(rooms.get(roomNum - 1));
         Scene roomScene = new Scene(roomVBox, 1000, 600);
         stage.setTitle("Virtual Tutoring");
+        
+        this.client.launchTextChat(this.client);
         
         //directoryViewScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
         

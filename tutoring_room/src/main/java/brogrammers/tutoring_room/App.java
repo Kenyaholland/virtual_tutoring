@@ -26,6 +26,7 @@ public class App extends Application
     public static void main(String[] args) 
     {
     	launch(args);
+    	
     	//SYSTESTER tester = new SYSTESTER();
     	//tester.run();
     }

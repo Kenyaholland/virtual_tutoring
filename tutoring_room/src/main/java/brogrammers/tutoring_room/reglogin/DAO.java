@@ -73,18 +73,17 @@ public class DAO
 			insert.setString(5, user.getRole());
 			insert.setString(6, null);
 			insert.setString(7, null);
-			insert.setString(8, null);
+			insert.setInt(8, 0);
 			
 			insert.executeUpdate();
 			
 			return true;
-		} 
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
 		}
-		
-		return false;
+		catch(Exception error)
+		{
+			error.printStackTrace();
+			return false;
+		}
 	}
 	
 	/**

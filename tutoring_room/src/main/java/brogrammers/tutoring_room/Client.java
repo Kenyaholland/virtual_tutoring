@@ -67,18 +67,10 @@ public class Client {
 		}
 	}
 	
-	public static void main(String[] args) {
+	public void launchTextChat(Client client) {
 				
 		//	get our client's user-name
-		System.out.print("username: ");
 		Scanner scanner = new Scanner(System.in); 
-		String username = scanner.nextLine();
-		
-		// connect to the server
-		Client client = new Client("localhost", 55555);
-			
-		// send the server our user name (this is protocol for our server)
-		client.send(username);
 		
 		// print incoming messages (threaded so we are not blocked)
 		// for app gui, we will need to print incoming messages to a 'textbox'
@@ -96,12 +88,12 @@ public class Client {
 		
 		// send console input
 		// for app gui, we will need to receive input from a 'textbox'
-		String message;
-		while (client.getSocket().isConnected()) {
-			if (!(message = scanner.nextLine()).equals("")) {
-				client.send(message);
-			}
-		}
+		//String message;
+		//while (client.getSocket().isConnected()) {
+			//if (!(message = scanner.nextLine()).equals("")) {
+				//client.send(message);
+			//}
+		//}
 		scanner.close();
 	}
 }
