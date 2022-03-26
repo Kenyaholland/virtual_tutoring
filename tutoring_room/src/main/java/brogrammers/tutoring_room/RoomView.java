@@ -1,7 +1,5 @@
 package brogrammers.tutoring_room;
 
-import java.util.Scanner;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -29,7 +27,9 @@ public class RoomView extends Pane{
 	private Stage stage;
 	private SceneSwitcher switcher;
 	private int roomNum;
-	private Scanner scanner;
+	
+	// For chat room
+	private Client client;
 	
 	// Labels
 	private Label titleLabel;
@@ -78,8 +78,6 @@ public class RoomView extends Pane{
 		this.switcher = switcher;
 		this.roomNum = roomNum;
 		
-		scanner = new Scanner(System.in);
-
 		initializeVariables();
 		stylizeElements();
 		
@@ -133,27 +131,64 @@ public class RoomView extends Pane{
 		tutorRoomBox.setSpacing(25);
 	}
 	
+	public void joinChatServer(String username) {
+		try {
+			// connect to chat server
+			client = new Client("localhost", 55555);
+			client.send(username);
+			client.send(String.valueOf(roomNum));
+			
+			// run thread to receive messages
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					String message;
+					while (true) {
+						message = client.receive();
+						if (message != null) {
+							displayChats.appendText(message + '\n');
+						} else {
+							break;
+						}
+					}
+					displayChats.appendText("Disconnected from chat server.\n");
+				}
+			}).start();
+
+			// attach button listeners
+			messageField.setOnKeyPressed(event -> {
+	            if (event.getCode() == KeyCode.ENTER) {
+	            	if (!messageField.getText().equals("")) {
+	            		client.send(messageField.getText());
+	            	}
+	            	messageField.setText("");
+	            }
+	        });
+			sendChatButton.setOnAction(event -> {
+            	if (!messageField.getText().equals("")) {
+            		client.send(messageField.getText());
+            	}
+	        	messageField.setText("");
+	        });			
+			directoryButton.setOnAction(event -> {
+				client.close();
+				stage.setScene(switcher.DirectoryScene());
+	        });	
+			logoutButton.setOnAction(event -> {
+				client.close();
+				stage.setScene(switcher.LoginScene());
+	        });
+			displayChats.setText("Connected to the chat server.\n");
+		} catch (NullPointerException e) {
+			displayChats.setText("Failed to connect to chat server.\n");
+		}
+	}
+	
 	public void assignSetOnActions()
 	{
 		directoryButton.setOnAction(e -> stage.setScene(switcher.DirectoryScene()));
 		logoutButton.setOnAction(e -> stage.setScene(switcher.LoginScene()));
 		//zoomButton.setOnAction(e -> {});
-		
-		messageField.setOnKeyPressed(event -> {
-			String message = "";
-            if (event.getCode() == KeyCode.ENTER) {
-    			message = messageField.getText() + "\n";
-                messageField.setText("");
-                switcher.getClient().send(message);
-            }
-        });
-
-		sendChatButton.setOnAction((event) -> {
-			String message = "";
-			message = messageField.getText() + "\n";
-            messageField.setText("");
-            switcher.getClient().send(message);
-        });
     }
 	
 	public void populateChildren() 
@@ -334,9 +369,5 @@ public class RoomView extends Pane{
 			
 		box.getChildren().addAll(breakoutRoomLabel, zoomButton, studentsTextBox);
 		return box;
-	}
-	
-	public TextArea getDisplayChats() {
-		return displayChats;
 	}
 }

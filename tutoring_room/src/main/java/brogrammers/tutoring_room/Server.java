@@ -26,9 +26,7 @@ public class Server {
 	public void start() {	
 		try {
 			System.out.println("server started");
-			while (!serverSocket.isClosed()) {
-				System.out.println("waiting for connections");
-				
+			while (true) {
 				Socket socket = serverSocket.accept();
 				System.out.println("user connected");
 				
@@ -59,6 +57,7 @@ public class Server {
 		private BufferedReader bufferedReader;
 		private BufferedWriter bufferedWriter;
 		private String username;
+		private String roomNumber;
 		
 		public ClientHandler(Socket socket) {
 			try {
@@ -70,19 +69,27 @@ public class Server {
 				close();
 			}
 		}
+		
+		public String getRoomNumber() {
+			return roomNumber;
+		}
 
 		@Override
 		public void run() {
 			try {
 				username = bufferedReader.readLine();
+				roomNumber = bufferedReader.readLine();
 				
 				broadcast(username + " connected");
 				clientHandlers.add(this);
 				
 				String message;
-				while (socket.isConnected()) {
+				while (true) {
 					try {
 						message = bufferedReader.readLine();
+						if (message == null) {
+							break;
+						}
 						broadcast(username + ": " + message);
 					} catch (IOException e) {
 						break;
@@ -91,8 +98,7 @@ public class Server {
 				clientHandlers.remove(this);
 				broadcast(username + " disconnected");	
 				
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (IOException e) {	
 			} finally {
 				System.out.println("user disconnected");
 				close();	
@@ -101,13 +107,14 @@ public class Server {
 		
 		public void broadcast(String message) {
 			for (ClientHandler clientHandler : clientHandlers) {
-				try {
-					clientHandler.bufferedWriter.write(message);
-					clientHandler.bufferedWriter.newLine();
-					clientHandler.bufferedWriter.flush();
-				} catch (IOException e) {
-					e.printStackTrace();
-					close();
+				if (clientHandler.getRoomNumber().equals(this.roomNumber)) {
+					try {
+						clientHandler.bufferedWriter.write(message);
+						clientHandler.bufferedWriter.newLine();
+						clientHandler.bufferedWriter.flush();
+					} catch (IOException e) {
+						close();
+					}	
 				}
 			}
 		}

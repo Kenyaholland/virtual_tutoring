@@ -11,14 +11,13 @@ import javafx.stage.Stage;
 
 public class SceneSwitcher extends Pane{
 	private Stage stage;
-	private Client client;
 	
 	public ArrayList<RoomView> rooms;
+	public String username;
 	
 	public SceneSwitcher(Stage stage) {
 		this.stage = stage;
 		rooms = new ArrayList<RoomView>();
-		this.client = new Client("localhost", 55555);
 	}
 	
 	public void makeRooms() {
@@ -28,9 +27,6 @@ public class SceneSwitcher extends Pane{
 		}
 	}
 	
-	public Client getClient() {
-		return this.client;
-	}
 	
 	public Scene LoginScene() {
 		HBox loginBox = new HBox();
@@ -83,7 +79,6 @@ public class SceneSwitcher extends Pane{
 	}
 	
 	public Scene RoomScene(int roomNum) {
-		System.out.println("Switching to room " + roomNum);
 		VBox roomVBox = new VBox();
 
 		roomVBox.setAlignment(Pos.TOP_LEFT);
@@ -93,8 +88,13 @@ public class SceneSwitcher extends Pane{
         
         //directoryViewScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
         
-        this.client.launchTextChat(this.client, rooms.get(roomNum - 1));
-        
+        RoomView currentRoom = rooms.get(roomNum - 1);
+        currentRoom.joinChatServer(username);
+
         return roomScene;
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }

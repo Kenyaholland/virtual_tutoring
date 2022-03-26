@@ -105,9 +105,7 @@ public class LoginCredentialsView
     	{
     		alert.setContentText("You have been successfully authenticated.");
     			
-    		// send the server our user name (this is protocol for our server)
-    		switcher.getClient().setUsername(username);
-    		switcher.getClient().send(username);
+    		switcher.setUsername(username);
     		
     		stage.setScene(switcher.DirectoryScene());
     	}
