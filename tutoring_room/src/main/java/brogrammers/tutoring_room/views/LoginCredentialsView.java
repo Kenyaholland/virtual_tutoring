@@ -1,6 +1,8 @@
-package brogrammers.tutoring_room;
+package brogrammers.tutoring_room.views;
 
+import brogrammers.tutoring_room.SceneSwitcher;
 import brogrammers.tutoring_room.reglogin.Login;
+
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -104,15 +106,14 @@ public class LoginCredentialsView
     	if(login.login(username, password))
     	{
     		alert.setContentText("You have been successfully authenticated.");
-    			
-    		switcher.setUsername(username);
-    		
+    		switcher.openSession(username);
     		stage.setScene(switcher.DirectoryScene());
     	}
     	else
     	{
     		alert.setContentText("The credentials you have entered are invalid.");
     	}
+    	
     	alert.showAndWait();
     }
     

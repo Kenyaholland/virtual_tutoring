@@ -1,15 +1,18 @@
-package brogrammers.tutoring_room;
+package brogrammers.tutoring_room.views;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import brogrammers.tutoring_room.SceneSwitcher;
+import brogrammers.tutoring_room.controllers.DirectoryController;
+import brogrammers.tutoring_room.controllers.RoomController;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -17,9 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 
 public class RoomView extends Pane{
 	
@@ -27,9 +27,9 @@ public class RoomView extends Pane{
 	private Stage stage;
 	private SceneSwitcher switcher;
 	private int roomNum;
-	
-	// For chat room
-	private Client client;
+	private String sessionId;
+	private RoomController roomCtrl; 
+	private DirectoryController dirCtrl;
 	
 	// Labels
 	private Label titleLabel;
@@ -40,20 +40,12 @@ public class RoomView extends Pane{
 	// Text
 	private Text coursesText;
 	
-	// TextField
-	private TextField messageField;
-	
-	// Text Area
-	TextArea displayChats;
-	
 	// Buttons
+	private Button refreshButton;
 	private Button directoryButton;
+	private List<Button> joinGroupButtons;
 	private Button logoutButton;
 	private Button tutorZoomButton;
-	private Button sendChatButton;
-	
-	// ScrollPane
-	ScrollPane chatWindow;
 	
 	// Boxes
 	private HBox headerBox;
@@ -61,10 +53,7 @@ public class RoomView extends Pane{
 	private HBox headerButtonBox;
 	private VBox tutorInfoBox;
 	private HBox coursesTextBox;
-	private VBox chatBox;
-	private VBox createMessageBox;
-	private VBox sendMessageBox;
-	private GridPane chatPane;
+	private Pane chatPane;
 	private HBox middleBox;
 	private HBox breakoutRoomsBox;
 	private VBox tutorRoomBox;
@@ -72,23 +61,27 @@ public class RoomView extends Pane{
 	//Image blankIcon = new Image(getClass().getResourceAsStream("/main/java/brogrammers/tutoring_room/white_square.png"));
 	//Image raiseHandIcon = new Image(getClass().getResourceAsStream("/main/java/brogrammers/tutoring_room/raisedHand.jpg"));
 	
-	public RoomView(Stage stage, SceneSwitcher switcher, int roomNum)
+	public RoomView(Stage stage, SceneSwitcher switcher, int roomNum, String sessionId)
 	{
 		this.stage = stage;
 		this.switcher = switcher;
 		this.roomNum = roomNum;
-		
+		this.sessionId = sessionId;
+		roomCtrl = new RoomController(roomNum, this.sessionId);
+		dirCtrl = new DirectoryController(this.sessionId);
+
 		initializeVariables();
 		stylizeElements();
-		
-		assignSetOnActions();
+
 		populateChildren();
+		assignSetOnActions();
 	}
 	
 	public void initializeVariables()
 	{
 		// Header components
 		titleLabel = new Label("Tutoring Room " + this.roomNum);
+		refreshButton = new Button("Refresh");
 		directoryButton = new Button("Return to Directory");
 		titleBox = new HBox();
 		headerButtonBox = new HBox();
@@ -101,21 +94,15 @@ public class RoomView extends Pane{
 		tutorNameLabel = new Label();
 		statusLabel = new Label();
 		coursesText = new Text();
-		messageField = new TextField();
-		sendChatButton = new Button("Send");
-		displayChats = new TextArea();
-		chatWindow = new ScrollPane();
-		chatBox = new VBox();
-		createMessageBox = new VBox();
-		sendMessageBox = new VBox();
 		coursesTextBox = new HBox();
 		tutorInfoBox = new VBox();
-		chatPane = new GridPane();
+		chatPane = new Pane();
 		middleBox = new HBox();
 		
 		// Break-out rooms components
 		//raiseHandIcon = new Image(getClass().getResourceAsStream("raisedHand.jpg"));
 		breakoutRoomsBox = new HBox();
+		joinGroupButtons = new ArrayList<Button>();
 		
 		tutorRoomBox = new VBox();
 	}
@@ -131,76 +118,44 @@ public class RoomView extends Pane{
 		tutorRoomBox.setSpacing(25);
 	}
 	
-	public void joinChatServer(String username) {
-		try {
-			// connect to chat server
-			client = new Client("localhost", 55555);
-			client.send(username);
-			client.send(String.valueOf(roomNum));
-			
-			// run thread to receive messages
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					String message;
-					while (true) {
-						message = client.receive();
-						if (message != null) {
-							displayChats.appendText(message + '\n');
-						} else {
-							break;
-						}
-					}
-					displayChats.appendText("Disconnected from chat server.\n");
-				}
-			}).start();
-
-			// attach button listeners
-			messageField.setOnKeyPressed(event -> {
-	            if (event.getCode() == KeyCode.ENTER) {
-	            	if (!messageField.getText().equals("")) {
-	            		client.send(messageField.getText());
-	            	}
-	            	messageField.setText("");
-	            }
-	        });
-			sendChatButton.setOnAction(event -> {
-            	if (!messageField.getText().equals("")) {
-            		client.send(messageField.getText());
-            	}
-	        	messageField.setText("");
-	        });			
-			directoryButton.setOnAction(event -> {
-				client.close();
-				stage.setScene(switcher.DirectoryScene());
-	        });	
-			logoutButton.setOnAction(event -> {
-				client.close();
-				stage.setScene(switcher.LoginScene());
-	        });
-			displayChats.setText("Connected to the chat server.\n");
-		} catch (NullPointerException e) {
-			displayChats.setText("Failed to connect to chat server.\n");
-		}
-	}
-	
 	public void assignSetOnActions()
 	{
-		directoryButton.setOnAction(e -> stage.setScene(switcher.DirectoryScene()));
-		logoutButton.setOnAction(e -> stage.setScene(switcher.LoginScene()));
-		//zoomButton.setOnAction(e -> {});
-    }
+		refreshButton.setOnAction(e -> {
+			stage.setScene(switcher.RoomScene(roomNum));
+		});
+		
+		directoryButton.setOnAction(e -> {
+			roomCtrl.removeFromBreakoutGroup();
+			dirCtrl.removeFromRoom();
+			stage.setScene(switcher.DirectoryScene());
+		});
+		
+		logoutButton.setOnAction(e -> {
+			roomCtrl.removeFromBreakoutGroup();
+			dirCtrl.removeFromRoom();
+			boolean logout = true;
+			stage.setScene(switcher.LoginScene(logout));
+		});
+		
+		for (int i = 1; i <= 4; i++) {
+			final int groupNum = i;
+			joinGroupButtons.get(i-1).setOnAction(e -> {
+				//produce zoom link
+				roomCtrl.joinBreakoutGroup(groupNum);
+			});
+		}
+	}
 	
 	public void populateChildren() 
 	{
 		titleBox.getChildren().add(titleLabel);
-		headerButtonBox.getChildren().addAll(directoryButton, logoutButton);
+		headerButtonBox.getChildren().addAll(refreshButton, directoryButton, logoutButton);
 		headerBox.getChildren().addAll(titleBox, headerButtonBox);
 		
 		middleBox.getChildren().addAll(tutorInfoBox, chatPane);
 		
 		for (int i = 1; i <= 4; i++) {
-			breakoutRoomsBox.getChildren().add(buildBreakoutRoomBox(i));
+			breakoutRoomsBox.getChildren().add(buildBreakoutGroupBox(i));
 		}
 		
 		tutorRoomBox.getChildren().addAll(headerBox, middleBox, breakoutRoomsBox);
@@ -215,6 +170,9 @@ public class RoomView extends Pane{
 		titleLabel.setTranslateX(10);
 				
 		// Stylize buttons
+		refreshButton.setPrefSize(80, 10);
+		refreshButton.setFont(new Font("Arial", 10));
+		
 		directoryButton.setPrefSize(130, 10);
 		directoryButton.setFont(new Font("Arial", 10));
 				
@@ -229,7 +187,7 @@ public class RoomView extends Pane{
 				
 		//headerButtonBox.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
 		headerButtonBox.setAlignment(Pos.CENTER_RIGHT);
-		headerButtonBox.setTranslateX(550);
+		headerButtonBox.setTranslateX(470);
 		headerButtonBox.setSpacing(10);
 				
 		// Stylize header
@@ -284,26 +242,9 @@ public class RoomView extends Pane{
 		
 		tutorInfoBox.getChildren().addAll(tutorBoxLabel, tutorNameLabel, coursesTextBox, statusLabel, tutorZoomButton);
 		
-		messageField.setEditable(true);
-		messageField.setPrefWidth(525);
-		displayChats.setPrefHeight(250);
-		displayChats.setEditable(false);
-		chatWindow.setContent(displayChats);
-		chatWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        displayChats.setPrefWidth(525);
-		
-        chatBox.setPadding(new Insets(10, 10, 10, 10));
-        chatBox.getChildren().add(displayChats);
-		createMessageBox.setPadding(new Insets(10, 10, 10, 10));
-		createMessageBox.getChildren().add(messageField);
-		sendMessageBox.setPadding(new Insets(10, 10, 10, 10));
-		sendMessageBox.getChildren().add(sendChatButton);
-        
 		chatPane.setPrefSize(650, 300);
+		chatPane.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
 		chatPane.setTranslateX(30);
-		chatPane.add(chatBox, 0, 0);
-		chatPane.add(createMessageBox, 0, 1);
-		chatPane.add(sendMessageBox, 1, 1);
 		chatPane.setStyle("-fx-padding: 10;" + 
                 "-fx-border-style: solid inside;" + 
                 "-fx-border-width: 2;" + 
@@ -326,11 +267,11 @@ public class RoomView extends Pane{
 		breakoutRoomsBox.setPadding(new Insets(0, 25, 0, 25));
 	}
 	
-	private VBox buildBreakoutRoomBox(int index)
+	private VBox buildBreakoutGroupBox(int groupNum)
 	{
 		VBox box = new VBox();
 		
-		Label breakoutRoomLabel = new Label("Group " + index);
+		Label breakoutRoomLabel = new Label("Group " + groupNum);
 //		ImageView handIV = new ImageView(blankIcon);
 //		breakoutRoomLabel.setGraphic(handIV);
 		breakoutRoomLabel.setPrefSize(220, 30);
@@ -338,12 +279,15 @@ public class RoomView extends Pane{
 		//breakoutRoomLabel.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, null, null)));
 		breakoutRoomLabel.setPadding(new Insets(0, 10, 0, 10));
 		
-		Button zoomButton = new Button("Enter Zoom Room");
-		zoomButton.setPrefSize(130, 20);
-		zoomButton.setFont(new Font("Arial", 12));
-		zoomButton.setTranslateX(35);
+		Button joinGroupButton = new Button("Join Breakout Room");
+		joinGroupButton.setPrefSize(130, 20);
+		joinGroupButton.setFont(new Font("Arial", 12));
+		joinGroupButton.setTranslateX(35);
+		joinGroupButtons.add(joinGroupButton);
 		
-		Text studentsText = new Text("Students: <list>");
+		String groupMemberList = "Students:\n";
+		groupMemberList += roomCtrl.getGroupMembers(groupNum);
+		Text studentsText = new Text(groupMemberList);
 		
 		HBox studentsTextBox = new HBox();
 		studentsTextBox.setPrefSize(160, 90);
@@ -367,7 +311,7 @@ public class RoomView extends Pane{
 		//studentsText.setText -> String of names from ResultSet of query for students in room [i]
 		//studentsText.setWrappingWidth(150)
 			
-		box.getChildren().addAll(breakoutRoomLabel, zoomButton, studentsTextBox);
+		box.getChildren().addAll(breakoutRoomLabel, joinGroupButton, studentsTextBox);
 		return box;
 	}
 }

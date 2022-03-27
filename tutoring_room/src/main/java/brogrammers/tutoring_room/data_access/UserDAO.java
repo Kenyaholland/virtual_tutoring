@@ -1,22 +1,27 @@
-package brogrammers.tutoring_room.reglogin;
+package brogrammers.tutoring_room.data_access;
+
+import brogrammers.tutoring_room.reglogin.User;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The Brogrammers 
  * CIS4592 Capstone Project 
  * Spring 2022
  * 
- * Purpose: Performs database operations 
+ * Contains methods that allow database access for users table
  */
-public class DAO 
+public class UserDAO 
 {
 	Connection connection;
 	
-	public DAO(){}
+	public UserDAO(){}
 	
 	/**
 	 * Establishes a connection to the mySQL database
@@ -57,7 +62,7 @@ public class DAO
 	 * @param user This is the user to be inserted
 	 * @return
 	 */
-	public boolean insertUser(User user)
+	public boolean insertUser(User user, String password)
 	{
 		try 
 		{
@@ -67,7 +72,7 @@ public class DAO
 			insert = connection.prepareStatement(query);
 			
 			insert.setString(1, user.getUserName());
-			insert.setString(2, user.getPassword());
+			insert.setString(2, password);
 			insert.setString(3, user.getSalt());
 			insert.setString(4, user.getEmailAddress());
 			insert.setString(5, user.getRole());
@@ -269,6 +274,219 @@ public class DAO
 		
 		return null;
 	}
+	
+	public String getEmail(String userName)
+	{
+		try
+		{
+			String query = "SELECT * FROM users WHERE username=?";
+			
+			PreparedStatement get;
+			get = connection.prepareStatement(query);
+			
+			get.setString(1, userName);
+			
+			ResultSet rs = get.executeQuery();
+		
+			if(rs.next()) 
+			{ 
+				String email = rs.getString("email");
+				return email;
+			}
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+		return null;
+	}
+	
+	public String getRole(String userName)
+	{
+		try
+		{
+			String query = "SELECT * FROM users WHERE username=?";
+			
+			PreparedStatement get;
+			get = connection.prepareStatement(query);
+			
+			get.setString(1, userName);
+			
+			ResultSet rs = get.executeQuery();
+		
+			if(rs.next()) 
+			{ 
+				String role = rs.getString("role");
+				return role;
+			}
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+		return null;
+	}
+	
+	public boolean setRoomNum(String username, int roomNum)
+	{
+		try
+		{
+			String query = "UPDATE users SET roomNum=? WHERE username=?";
+			
+			PreparedStatement get;
+			get = connection.prepareStatement(query);
+			
+			get.setInt(1, roomNum);
+			get.setString(2, username);			
+			
+			get.executeUpdate();
+			
+			return true;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	public int getRoomNum(String username)
+	{
+		try
+		{
+			String query = "SELECT * FROM users WHERE username=?";
+			
+			PreparedStatement get;
+			get = connection.prepareStatement(query);
+			
+			get.setString(1, username);			
+			
+			ResultSet rs = get.executeQuery();
+			
+			if (rs.next()) {
+				int roomNum = rs.getInt("roomNum");
+				return roomNum;
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return -1;
+	}
+	
+	public int getNumUsersInRoom(int roomNum)
+	{
+		try
+		{
+			String query = "SELECT COUNT(username) FROM users WHERE roomNum=?";
+			
+			PreparedStatement get;
+			get = connection.prepareStatement(query);
+			
+			get.setInt(1, roomNum);
+			
+			ResultSet rs = get.executeQuery();
+		
+			if (rs.next()) 
+			{ 
+				int count = rs.getInt("count");
+				return count;
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return 0;
+	}
+	
+	public boolean setGroupNum(String username, int groupNum)
+	{
+		try
+		{
+			String query = "UPDATE users SET groupNum=? WHERE username=?";
+			
+			PreparedStatement get;
+			get = connection.prepareStatement(query);
+			
+			get.setInt(1, groupNum);
+			get.setString(2, username);			
+			
+			get.executeUpdate();
+			
+			return true;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	public int getGroupNum(String username)
+	{
+		try
+		{
+			String query = "SELECT * FROM users WHERE username=?";
+			
+			PreparedStatement get;
+			get = connection.prepareStatement(query);
+			
+			get.setString(1, username);			
+			
+			ResultSet rs = get.executeQuery();
+			
+			if (rs.next()) {
+				int groupNum = rs.getInt("groupNum");
+				return groupNum;
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return -1;
+	}
+	
+	public List<String> getGroupUsernames(int roomNum, int groupNum)
+	{
+		try
+		{
+			String query = "SELECT * FROM users WHERE roomNum=? AND groupNum=?";
+			
+			PreparedStatement get;
+			get = connection.prepareStatement(query);
+			
+			get.setInt(1, roomNum);
+			get.setInt(2, groupNum);
+			
+			ResultSet rs = get.executeQuery();
+		
+			List<String> usernames = new ArrayList<String>();
+			while (rs.next()) 
+			{ 
+				String username = rs.getString("username");
+				usernames.add(username);
+			}
+			
+			return usernames;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	
 	/**
 	 * Closes the database connection

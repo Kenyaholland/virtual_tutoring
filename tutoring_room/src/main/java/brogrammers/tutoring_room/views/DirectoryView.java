@@ -1,18 +1,17 @@
-package brogrammers.tutoring_room;
+package brogrammers.tutoring_room.views;
+
+import brogrammers.tutoring_room.SceneSwitcher;
+import brogrammers.tutoring_room.controllers.DirectoryController;
 
 import java.util.ArrayList;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -21,6 +20,8 @@ public class DirectoryView extends Pane{
 	// For switching scenes
 	private Stage stage;
 	private SceneSwitcher switcher;
+	private String sessionId;
+	private DirectoryController dirCtrl;
 	
 	// ArrayList for storing and accessing room VBoxes
 	private ArrayList<VBox> roomVBoxes;
@@ -44,10 +45,12 @@ public class DirectoryView extends Pane{
 	private VBox directoryBox;
 	
 	
-	public DirectoryView(Stage stage, SceneSwitcher switcher)
+	public DirectoryView(Stage stage, SceneSwitcher switcher, String sessionId)
 	{
 		this.stage = stage;
 		this.switcher = switcher;
+		this.sessionId = sessionId;
+		this.dirCtrl = new DirectoryController(this.sessionId);
 
 		this.roomVBoxes = new ArrayList<VBox>();
 		
@@ -90,8 +93,14 @@ public class DirectoryView extends Pane{
 	
 	public void assignSetOnActions()
 	{
-		//refreshButton.setOnAction(e -> ); // refresh page
-		logoutButton.setOnAction(e -> stage.setScene(switcher.LoginScene()));
+		refreshButton.setOnAction(e -> {
+			stage.setScene(switcher.DirectoryScene());
+		}); // refresh page
+		
+		logoutButton.setOnAction(e -> {
+			boolean onLogout = true;
+			stage.setScene(switcher.LoginScene(onLogout));
+		});
 	}
 	
 	public void populateChildren() 
@@ -161,7 +170,10 @@ public class DirectoryView extends Pane{
 		Button roomButton = new Button("Join");
 		HBox.setMargin(roomButton, new Insets(10, 10, 10, 0));
 		// TO-DO: Switch to unique room scenes
-		roomButton.setOnAction(e -> stage.setScene(switcher.RoomScene(roomNum)));
+		roomButton.setOnAction(e -> {
+			dirCtrl.addUserToRoom(roomNum);
+			stage.setScene(switcher.RoomScene(roomNum));
+		});
 		
 		HBox roomHeaderBox = new HBox();
 		roomHeaderBox.setPrefSize(333.3, 20);
@@ -209,7 +221,17 @@ public class DirectoryView extends Pane{
 		studentsLabel.setFont(new Font("Arial", 12));
 		HBox.setMargin(studentsLabel, new Insets(0, 10, 0, 20));
 		
-		Label numOfStudents = new Label("(0)");
+		int numStudents = dirCtrl.getNumStudentsInRoom(roomNum);
+		String _numStudents;
+		
+		if (numStudents == 0) {
+			_numStudents = "-- currently empty --";
+		}
+		else {
+			_numStudents = String.valueOf(numStudents);
+		}
+		
+		Label numOfStudents = new Label(_numStudents);
 		numOfStudents.setFont(new Font("Arial", 12));
 		
 		HBox studentsRow = new HBox();

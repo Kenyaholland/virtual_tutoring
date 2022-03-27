@@ -1,5 +1,6 @@
-package brogrammers.tutoring_room;
+package brogrammers.tutoring_room.views;
 
+import brogrammers.tutoring_room.SceneSwitcher;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
