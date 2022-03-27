@@ -66,7 +66,7 @@ public class UserDAO
 	{
 		try 
 		{
-			String query = "INSERT INTO users " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			String query = "INSERT INTO users " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			
 			PreparedStatement insert;
 			insert = connection.prepareStatement(query);
@@ -79,6 +79,7 @@ public class UserDAO
 			insert.setString(6, null);
 			insert.setString(7, null);
 			insert.setInt(8, 0);
+			insert.setInt(9, 0);
 			
 			insert.executeUpdate();
 			
