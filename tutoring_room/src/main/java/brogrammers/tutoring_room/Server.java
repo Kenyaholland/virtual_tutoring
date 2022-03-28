@@ -17,37 +17,27 @@ public class Server {
 	public Server(int port) {
 		try {
 			serverSocket = new ServerSocket(port);
-			System.out.println("server ready");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void start() {	
-		try {
-			System.out.println("server started");
+			System.out.println("Server ready");
+			
 			while (true) {
 				Socket socket = serverSocket.accept();
-				System.out.println("user connected");
+				System.out.println("User connected");
 				
 				ClientHandler clientHandler = new ClientHandler(socket);		
 				Thread thread = new Thread(clientHandler);
 				thread.start();
 			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			close();
-		}
-	}
-	
-	public void close() {
-		try {
-			if (serverSocket != null) {
-				serverSocket.close();
+			try {
+				if (serverSocket != null) {
+					serverSocket.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -57,7 +47,7 @@ public class Server {
 		private BufferedReader bufferedReader;
 		private BufferedWriter bufferedWriter;
 		private String username;
-		private String roomNumber;
+		private String room;
 		
 		public ClientHandler(Socket socket) {
 			try {
@@ -69,64 +59,72 @@ public class Server {
 				close();
 			}
 		}
-		
-		public String getRoomNumber() {
-			return roomNumber;
-		}
 
 		@Override
 		public void run() {
 			try {
 				username = bufferedReader.readLine();
-				roomNumber = bufferedReader.readLine();
 				
-				broadcast(username + " connected");
 				clientHandlers.add(this);
 				
 				String message;
 				while (true) {
 					try {
 						message = bufferedReader.readLine();
-						if (message == null) {
-							break;
+						if (!message.equals("")) {
+							if (message.charAt(0) == '0') {
+								broadcast(username + " disconnected");
+								room = null;
+							} else if (message.charAt(0) == '1') {
+								broadcast(username + " disconnected");
+								room = String.valueOf(message.substring(1));
+								broadcast(username + " connected");
+							} else if (message.charAt(0) == '2') {
+								broadcast(username + ": " + message.substring(1));
+							}
 						}
-						broadcast(username + ": " + message);
 					} catch (IOException e) {
 						break;
 					}
 				}
+	
 				clientHandlers.remove(this);
 				broadcast(username + " disconnected");	
 				
-			} catch (IOException e) {	
+			} catch (IOException e) {
+				e.printStackTrace();
 			} finally {
-				System.out.println("user disconnected");
+				System.out.println("User disconnected");
 				close();	
 			}
 		}
 		
 		public void broadcast(String message) {
-			for (ClientHandler clientHandler : clientHandlers) {
-				if (clientHandler.getRoomNumber().equals(this.roomNumber)) {
-					try {
-						clientHandler.bufferedWriter.write(message);
-						clientHandler.bufferedWriter.newLine();
-						clientHandler.bufferedWriter.flush();
-					} catch (IOException e) {
-						close();
+			try {
+				if (room != null) {
+					for (ClientHandler clientHandler : clientHandlers) {
+						if (room.equals(clientHandler.getRoom())) {
+							clientHandler.bufferedWriter.write(message);
+							clientHandler.bufferedWriter.newLine();
+							clientHandler.bufferedWriter.flush();
+						}
 					}	
 				}
-			}
+			} catch (IOException e) {
+				close();
+			}	
+		}
+		
+		public String getUsername() {
+			return username;
+		}
+
+		public String getRoom() {
+			return room;
 		}
 		
 		public void close() {
 			try {
-				if (bufferedReader != null) {
-					bufferedReader.close();
-				}
-				if (bufferedWriter != null) {
-					bufferedWriter.close();
-				}
 				if (socket != null) {
 					socket.close();
 				}
@@ -137,7 +135,6 @@ public class Server {
 	}
 	
 	public static void main(String[] args) {
-		Server server = new Server(55555);
-		server.start();
+		new Server(55555);
 	}
 }
