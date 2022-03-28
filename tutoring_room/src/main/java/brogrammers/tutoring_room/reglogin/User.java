@@ -14,6 +14,8 @@ public class User
 	private String salt;
 	private String emailAddress;
 	private String role;
+	private String fName;
+	private String lName;
 	
 	/**
 	 * Parameterized constructor for creating a user
@@ -22,10 +24,9 @@ public class User
 	 * @param emailAddress This is the email address
 	 * @param role This is the user role
 	 */
-	public User(String userName, String password, String salt, String emailAddress, String role)
+	public User(String userName, String salt, String emailAddress, String role)
 	{
 		setUserName(userName);
-		setPassword(password);
 		setSalt(salt);
 		setEmailAddress(emailAddress);
 		setRole(role);
@@ -119,5 +120,15 @@ public class User
 	public String getRole()
 	{
 		return this.role;
+	}
+
+	public String getFName() 
+	{
+		return this.fName;
+	}
+	
+	public String getLName()
+	{
+		return this.lName;
 	}
 }

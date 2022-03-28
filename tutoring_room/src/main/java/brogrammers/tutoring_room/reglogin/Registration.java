@@ -5,6 +5,9 @@ import java.util.regex.Pattern;
 
 import javax.mail.*;
 import javax.mail.internet.*;
+
+import brogrammers.tutoring_room.data_access.UserDAO;
+
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.PasswordAuthentication;
@@ -21,7 +24,7 @@ public class Registration
 	private final int MAX_USERNAME_LENGTH = 32;
 	
 	private SecurityUtils sh;
-	private DAO dbo;
+	private UserDAO dbo;
 	private PasswordValidator pv;
 	
 	private String userName;
@@ -34,7 +37,7 @@ public class Registration
 	public Registration()
 	{
 		sh = new SecurityUtils();
-		dbo = new DAO();
+		dbo = new UserDAO();
 		pv = new PasswordValidator();
 	}
 	
@@ -65,11 +68,11 @@ public class Registration
 			
 			String pass = hash.concat(salt);
 			
-			User user = new User(userName, pass, salt, emailAddress, "Student");
+			User user = new User(userName, salt, emailAddress, "Student");
 			
 			dbo.connectToDatabase();
 			
-			dbo.insertUser(user);
+			dbo.insertUser(user, pass);
 			
 			dbo.closeConnection();
 			

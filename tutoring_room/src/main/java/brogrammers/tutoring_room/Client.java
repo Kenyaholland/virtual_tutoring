@@ -13,71 +13,42 @@ public class Client {
 	private Socket socket;
 	private BufferedReader bufferedReader;
 	private BufferedWriter bufferedWriter;
-	private Scanner scanner;
-	private String username;
 	
 	public Client(String address, int port) {
-		scanner = new Scanner(System.in);
-		System.out.print("username: ");
-		username = scanner.nextLine();
-
-		try {	
+		try {
 			socket = new Socket(address, port);
 			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			
-			bufferedWriter.write(username);
+		} catch (IOException e) {
+			close();
+		}
+	}
+	
+	// send a message
+	public Boolean send(String message) {
+		try {
+			bufferedWriter.write(message);
 			bufferedWriter.newLine();
 			bufferedWriter.flush();
+			return true;
 		} catch (IOException e) {
-			e.printStackTrace();
 			close();
 		}
+		return false;
 	}
 	
-	public void send() {
+	// get latest message
+	public String receive() {
 		try {
-			String message;
-			while (socket.isConnected()) {
-				message = scanner.nextLine();
-				if (!message.equals("")) {
-					bufferedWriter.write(username + ": " + message);
-					bufferedWriter.newLine();
-					bufferedWriter.flush();
-				}
-			}
-			scanner.close();
+			return bufferedReader.readLine();
 		} catch (IOException e) {
 			close();
 		}
-	}
-	
-	public void receive() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				String message;
-				while (socket.isConnected()) {
-					try {
-						message = bufferedReader.readLine();
-						System.out.println(message);						
-					} catch (IOException e) {
-						close();
-					}
-
-				}
-			}
-		}).start();
+		return null;
 	}
 	
 	public void close() {
 		try {
-			if (bufferedReader != null) {
-				bufferedReader.close();
-			}
-			if (bufferedWriter != null) {
-				bufferedWriter.close();
-			}
 			if (socket != null) {
 				socket.close();
 			}
@@ -87,8 +58,44 @@ public class Client {
 	}
 	
 	public static void main(String[] args) {
+				
+		// get our client's user-name
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("username: ");
+		String username = scanner.nextLine();
+		System.out.print("room number: ");
+		String roomNumber = scanner.nextLine();
+		
+		// connect to the server
 		Client client = new Client("localhost", 55555);
-		client.receive();
-		client.send();
+		
+		// send the server our user name and room number (this is protocol for our server)
+		client.send(username);
+		client.send(roomNumber);
+		
+		// print incoming messages (threaded so we are not blocked)
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				String message;
+				while (!Thread.interrupted()) {
+					message = client.receive();
+					if (message != null) {
+						System.out.println(message);
+					} else {
+						break;
+					}
+				}
+			}
+		}).start();	
+		
+		// send console input
+		String message;
+		while (!(message = scanner.nextLine()).equals("")) {
+			if (!client.send(message)) {
+				break;
+			}
+		}
+		scanner.close();
 	}
 }

@@ -26,11 +26,9 @@ public class Server {
 	public void start() {	
 		try {
 			System.out.println("server started");
-			while (!serverSocket.isClosed()) {
-				System.out.println("waiting for connections");
-				
+			while (true) {
 				Socket socket = serverSocket.accept();
-				System.out.println("incoming connection accepted");
+				System.out.println("user connected");
 				
 				ClientHandler clientHandler = new ClientHandler(socket);		
 				Thread thread = new Thread(clientHandler);
@@ -59,48 +57,64 @@ public class Server {
 		private BufferedReader bufferedReader;
 		private BufferedWriter bufferedWriter;
 		private String username;
+		private String roomNumber;
 		
 		public ClientHandler(Socket socket) {
 			try {
 				this.socket = socket;
 				bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-				username = bufferedReader.readLine();
 			} catch (IOException e) {
 				e.printStackTrace();
 				close();
 			}
 		}
+		
+		public String getRoomNumber() {
+			return roomNumber;
+		}
 
 		@Override
 		public void run() {
-			clientHandlers.add(this);
-			broadcast(username + " connected");
-			
-			String message;
-			while (socket.isConnected()) {
-				try {
-					message = bufferedReader.readLine();
-					broadcast(message);
-				} catch (IOException e) {
-					break;
+			try {
+				username = bufferedReader.readLine();
+				roomNumber = bufferedReader.readLine();
+				
+				broadcast(username + " connected");
+				clientHandlers.add(this);
+				
+				String message;
+				while (true) {
+					try {
+						message = bufferedReader.readLine();
+						if (message == null) {
+							break;
+						}
+						broadcast(username + ": " + message);
+					} catch (IOException e) {
+						break;
+					}
 				}
+				clientHandlers.remove(this);
+				broadcast(username + " disconnected");	
+				
+			} catch (IOException e) {	
+			} finally {
+				System.out.println("user disconnected");
+				close();	
 			}
-			
-			clientHandlers.remove(this);
-			broadcast(username + " disconnected");
-			close();	
 		}
 		
 		public void broadcast(String message) {
 			for (ClientHandler clientHandler : clientHandlers) {
-				try {
-					clientHandler.bufferedWriter.write(message);
-					clientHandler.bufferedWriter.newLine();
-					clientHandler.bufferedWriter.flush();
-				} catch (IOException e) {
-					e.printStackTrace();
-					close();
+				if (clientHandler.getRoomNumber().equals(this.roomNumber)) {
+					try {
+						clientHandler.bufferedWriter.write(message);
+						clientHandler.bufferedWriter.newLine();
+						clientHandler.bufferedWriter.flush();
+					} catch (IOException e) {
+						close();
+					}	
 				}
 			}
 		}
@@ -122,8 +136,8 @@ public class Server {
 		}
 	}
 	
-	//public static void main(String[] args) {
-		//Server server = new Server(55555);
-		//server.start();
-	//}
+	public static void main(String[] args) {
+		Server server = new Server(55555);
+		server.start();
+	}
 }

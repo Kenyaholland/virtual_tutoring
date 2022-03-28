@@ -1,5 +1,7 @@
 package brogrammers.tutoring_room.reglogin;
 
+import brogrammers.tutoring_room.data_access.UserDAO;
+
 /**
  * The Brogrammers 
  * CIS4592 Capstone Project 
@@ -10,12 +12,12 @@ package brogrammers.tutoring_room.reglogin;
 public class Login
 {
 	private SecurityUtils sh;
-	private DAO dao;
+	private UserDAO dao;
 	
 	public Login()
 	{
 		sh = new SecurityUtils();
-		dao = new DAO();
+		dao = new UserDAO();
 	}
 	
 	public boolean login(String userName, String password)
@@ -25,7 +27,7 @@ public class Login
 		
 		boolean success = false;
 		
-		//Check for existance of username in database
+		//Check for existence of username in database
 		if(!(dao.checkExistenceOfUserName(userName)))
 		{
 			return false;
