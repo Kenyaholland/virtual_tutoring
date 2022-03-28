@@ -76,8 +76,8 @@ public class UserDAO
 			insert.setString(3, user.getSalt());
 			insert.setString(4, user.getEmailAddress());
 			insert.setString(5, user.getRole());
-			insert.setString(6, null);
-			insert.setString(7, null);
+			insert.setString(6, user.getFirstName());
+			insert.setString(7, user.getLastName());
 			insert.setInt(8, 0);
 			insert.setInt(9, 0);
 			

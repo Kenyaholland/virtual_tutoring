@@ -9,6 +9,8 @@ package brogrammers.tutoring_room.reglogin;
  */
 public class User 
 {
+	private String firstName;
+	private String lastName;
 	private String userName;
 	private String password;
 	private String salt;
@@ -19,17 +21,57 @@ public class User
 	
 	/**
 	 * Parameterized constructor for creating a user
+	 * @param firstName This is the first name of the user
+	 * @param lastName This is the last name of the user
 	 * @param userName This is the userName
 	 * @param password This is the HASHED password
 	 * @param emailAddress This is the email address
 	 * @param role This is the user role
 	 */
-	public User(String userName, String salt, String emailAddress, String role)
+	public User(String firstName, String lastName, String userName, String salt, String emailAddress, String role)
 	{
+		setFirstName(firstName);
+		setLastName(lastName);
 		setUserName(userName);
 		setSalt(salt);
 		setEmailAddress(emailAddress);
 		setRole(role);
+	}
+	
+	/**
+	 * Sets the first name of the user
+	 * @param firstName This is the first name of the user
+	 */
+	public void setFirstName(String firstName)
+	{
+		this.firstName = firstName;
+	}
+	
+	/**
+	 * Returns the first name of the user
+	 * @return firstName This is the first name of the user
+	 */
+	public String getFirstName()
+	{
+		return this.firstName;
+	}
+	
+	/**
+	 * Sets the last name of the user
+	 * @param lastName This is the last name of the user
+	 */
+	public void setLastName(String lastName)
+	{
+		this.lastName = lastName;
+	}
+	
+	/**
+	 * Returns the last name of the user
+	 * @return lastName This is the last name of the user
+	 */
+	public String getLastName()
+	{
+		return this.lastName;
 	}
 	
 	/**

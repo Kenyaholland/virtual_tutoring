@@ -27,6 +27,8 @@ public class Registration
 	private UserDAO dbo;
 	private PasswordValidator pv;
 	
+	private String firstName;
+	private String lastName;
 	private String userName;
 	private String password;
 	private String emailAddress;
@@ -55,11 +57,11 @@ public class Registration
 	{
 		if(isInformationGood(userName, password, emailAddress))
 		{
-			register(userName, password, emailAddress, enteredCode);
+			register(firstName, lastName, userName, password, emailAddress, enteredCode);
 		}
 	}
 	
-	public User register(String userName, String password, String emailAddress, String enteredCode)
+	public User register(String firstName, String lastName, String userName, String password, String emailAddress, String enteredCode)
 	{
 		if(isValidCode(enteredCode))
 		{
@@ -68,7 +70,7 @@ public class Registration
 			
 			String pass = hash.concat(salt);
 			
-			User user = new User(userName, salt, emailAddress, "Student");
+			User user = new User(firstName, lastName, userName, salt, emailAddress, "Student");
 			
 			dbo.connectToDatabase();
 			

@@ -33,6 +33,8 @@ public class RegistrationView
 	private VBox root = new VBox();
 	private HBox buttons = new HBox();
 	
+	private String firstName;
+	private String lastName;
 	private String username;
 	private String password;
 	private String email;
@@ -59,12 +61,22 @@ public class RegistrationView
     	
     	Hyperlink login = new Hyperlink("Return to Login");
     	
+    	TextField firstName_field = new TextField("");
+    	TextField lastName_field = new TextField("");
     	TextField username_field = new TextField("");
     	PasswordField password_field = new PasswordField();
     	TextField email_field = new TextField("");
+    	firstName_field.setPromptText("First Name");
+    	lastName_field.setPromptText("Last Name");
     	username_field.setPromptText("Username");
     	password_field.setPromptText("Password");
     	email_field.setPromptText("Email Address");
+    	
+    	firstName_field.setMaxWidth(256);
+    	firstName_field.setMaxHeight(128);
+    	
+    	lastName_field.setMaxWidth(256);
+    	lastName_field.setMaxHeight(128);
     	
     	username_field.setMaxWidth(256);
     	username_field.setMaxHeight(128);
@@ -80,22 +92,26 @@ public class RegistrationView
     	buttons.getChildren().add(register);
     	
     	root.getChildren().add(title);
+    	root.getChildren().add(firstName_field);
+    	root.getChildren().add(lastName_field);
     	root.getChildren().add(username_field);
     	root.getChildren().add(password_field);
     	root.getChildren().add(email_field);
     	root.getChildren().add(buttons);
     	root.getChildren().add(login);
     	
-    	register.setOnAction(e -> getCredentials(username_field, password_field, email_field));
+    	register.setOnAction(e -> getCredentials(firstName_field, lastName_field, username_field, password_field, email_field));
     	login.setOnAction(e -> stage.setScene(switcher.LoginCredentialsScene()));
     	
     	scene = new Scene(root, 1000, 500);
     }
     
-    public void getCredentials(TextField username_field, TextField password_field, TextField email_field)
+    public void getCredentials(TextField firstName_field, TextField lastName_field, TextField username_field, TextField password_field, TextField email_field)
     {
     	Registration registration = new Registration();
     	
+    	firstName = firstName_field.getText();
+    	lastName = lastName_field.getText();
     	username = username_field.getText();
     	password = password_field.getText();
     	email = email_field.getText();
@@ -142,7 +158,7 @@ public class RegistrationView
     		
     		if(registration.isValidCode(code))
     		{
-    			registerForApp(registration, username, password, email, code);
+    			registerForApp(registration, firstName, lastName, username, password, email, code);
     		}
     		else
     		{
@@ -152,14 +168,13 @@ public class RegistrationView
     	}
     }
     
-    @SuppressWarnings("exports")
-	public void registerForApp(Registration registration, String username, String password, String email, String code)
+	public void registerForApp(Registration registration, String firstName, String lastName, String username, String password, String email, String code)
     {
     	Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle("Registration Alert");
     	alert.setHeaderText("Information about your registration attempt");
     	
-    	if(registration.register(username, password, email, code) != null)
+    	if(registration.register(firstName, lastName, username, password, email, code) != null)
     	{
     		alert.setContentText("You have been successfully registered. You may now login.");
     	}
