@@ -5,6 +5,7 @@ module brogrammers.tutoring_room {
 	requires org.apache.commons.lang3;
 	requires transitive javafx.graphics;
 	requires transitive javafx.controls;
+	requires javafx.base;
 	//requires mysql.connector.java;
     exports brogrammers.tutoring_room;
 }

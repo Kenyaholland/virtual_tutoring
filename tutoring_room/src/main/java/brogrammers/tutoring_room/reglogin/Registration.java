@@ -83,6 +83,29 @@ public class Registration
 		return null;
 	}
 	
+	public User registerTutor(String tutoringCourse, String firstName, String lastName, String userName, String password, String emailAddress, String enteredCode)
+	{
+		if(isValidCode(enteredCode))
+		{
+			String hash = sh.hashPassword(password);
+			String salt = sh.generateSalt();
+			
+			String pass = hash.concat(salt);
+			
+			User user = new User(firstName, lastName, userName, salt, emailAddress, "Tutor");
+			
+			dbo.connectToDatabase();
+			
+			dbo.insertUser(user, pass);
+			dbo.insertTutor(userName, tutoringCourse);
+			
+			dbo.closeConnection();
+			
+			return user;
+		}
+		return null;
+	}
+	
 	public boolean isUserNameValid(String userName)
 	{
 		if(userName.length() < MIN_USERNAME_LENGTH || userName.length() > MAX_USERNAME_LENGTH)

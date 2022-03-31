@@ -1,11 +1,13 @@
 package brogrammers.tutoring_room;
 
 import brogrammers.tutoring_room.controllers.SessionController;
+import brogrammers.tutoring_room.data_access.CoursesDAO;
 import brogrammers.tutoring_room.views.DirectoryView;
 import brogrammers.tutoring_room.views.LoginCredentialsView;
 import brogrammers.tutoring_room.views.LoginView;
 import brogrammers.tutoring_room.views.RegistrationView;
 import brogrammers.tutoring_room.views.RoomView;
+import brogrammers.tutoring_room.views.TutorRegView;
 
 import java.util.ArrayList;
 import javafx.geometry.Pos;
@@ -19,6 +21,8 @@ public class SceneSwitcher extends Pane{
 	private Stage stage;
 	private SessionController sessionCtrl;
 	public ArrayList<RoomView> rooms;
+	
+	public static CoursesDAO course_dao = new CoursesDAO();
 	
 	public SceneSwitcher(Stage stage) 
 	{
@@ -45,7 +49,7 @@ public class SceneSwitcher extends Pane{
     	
     	loginBox.setAlignment(Pos.CENTER);
     	loginBox.getChildren().add(loginView);
-        Scene loginScene = new Scene(loginBox, 400, 500);
+        Scene loginScene = new Scene(loginBox, 1000, 500);
         
       //loginScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
         if (onLogout) {
@@ -70,7 +74,8 @@ public class SceneSwitcher extends Pane{
 	
 	public Scene RegistrationScene() 
 	{
-    	RegistrationView regView = new RegistrationView(stage, this);
+    	//RegistrationView regView = new RegistrationView(stage, this);
+		TutorRegView regView = new TutorRegView(stage, this);
     	stage.setTitle("Sign in");
  
         Scene regScene = regView.getScene();

@@ -92,6 +92,29 @@ public class UserDAO
 		}
 	}
 	
+	public boolean insertTutor(String username, String tutoringCourse)
+	{
+		try 
+		{
+			String query = "UPDATE courses " + "SET tutor=? WHERE crn=?";
+			
+			PreparedStatement insert;
+			insert = connection.prepareStatement(query);
+			
+			insert.setString(1, username);
+			insert.setString(2, tutoringCourse);
+			
+			insert.executeUpdate();
+			
+			return true;
+		}
+		catch(Exception error)
+		{
+			error.printStackTrace();
+			return false;
+		}
+	}
+	
 	/**
 	 * Deletes a user from the database
 	 * @param user This is the user to be deleted
