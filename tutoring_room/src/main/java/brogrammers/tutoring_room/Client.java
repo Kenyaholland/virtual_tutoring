@@ -20,7 +20,7 @@ public class Client {
 			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Failed to connect to server");
 			close();
 		}
 	}

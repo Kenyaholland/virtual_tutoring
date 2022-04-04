@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import brogrammers.tutoring_room.SceneSwitcher;
+import brogrammers.tutoring_room.controllers.ClientController;
 import brogrammers.tutoring_room.controllers.DirectoryController;
 import brogrammers.tutoring_room.controllers.RoomController;
 
@@ -11,8 +12,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -30,6 +36,7 @@ public class RoomView extends Pane{
 	private String sessionId;
 	private RoomController roomCtrl; 
 	private DirectoryController dirCtrl;
+	private ClientController clientCtrl;
 	
 	// Labels
 	private Label titleLabel;
@@ -40,12 +47,22 @@ public class RoomView extends Pane{
 	// Text
 	private Text coursesText;
 	
+	// TextField
+	private TextField messageField;
+
+	// Text Area
+	private TextArea displayChats;
+	
 	// Buttons
 	private Button refreshButton;
 	private Button directoryButton;
 	private List<Button> joinGroupButtons;
 	private Button logoutButton;
 	private Button tutorZoomButton;
+	private Button sendChatButton;
+	
+	// ScrollPane
+	private ScrollPane chatWindow;
 	
 	// Boxes
 	private HBox headerBox;
@@ -53,7 +70,10 @@ public class RoomView extends Pane{
 	private HBox headerButtonBox;
 	private VBox tutorInfoBox;
 	private HBox coursesTextBox;
-	private Pane chatPane;
+	private VBox chatBox;
+	private VBox createMessageBox;
+	private VBox sendMessageBox;
+	private GridPane chatPane;
 	private HBox middleBox;
 	private HBox breakoutRoomsBox;
 	private VBox tutorRoomBox;
@@ -61,12 +81,13 @@ public class RoomView extends Pane{
 	//Image blankIcon = new Image(getClass().getResourceAsStream("/main/java/brogrammers/tutoring_room/white_square.png"));
 	//Image raiseHandIcon = new Image(getClass().getResourceAsStream("/main/java/brogrammers/tutoring_room/raisedHand.jpg"));
 	
-	public RoomView(Stage stage, SceneSwitcher switcher, int roomNum, String sessionId)
+	public RoomView(Stage stage, SceneSwitcher switcher, ClientController clientCtrl, int roomNum, String sessionId)
 	{
 		this.stage = stage;
 		this.switcher = switcher;
 		this.roomNum = roomNum;
 		this.sessionId = sessionId;
+		this.clientCtrl = clientCtrl;
 		roomCtrl = new RoomController(roomNum, this.sessionId);
 		dirCtrl = new DirectoryController(this.sessionId);
 
@@ -96,7 +117,14 @@ public class RoomView extends Pane{
 		coursesText = new Text();
 		coursesTextBox = new HBox();
 		tutorInfoBox = new VBox();
-		chatPane = new Pane();
+		messageField = new TextField();
+		sendChatButton = new Button("Send");
+		displayChats = new TextArea();
+		chatWindow = new ScrollPane();
+		chatBox = new VBox();
+		createMessageBox = new VBox();
+		sendMessageBox = new VBox();
+		chatPane = new GridPane();
 		middleBox = new HBox();
 		
 		// Break-out rooms components
@@ -120,6 +148,37 @@ public class RoomView extends Pane{
 	
 	public void assignSetOnActions()
 	{
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						String message = clientCtrl.getMessage();
+						displayChats.appendText(message + '\n');
+					} catch (Exception e) {
+						break;
+					}
+				}
+			}
+		}).start();
+		
+		messageField.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				if (!messageField.getText().equals("")) {
+					clientCtrl.sendMessage(messageField.getText());
+					messageField.setText("");
+				}
+			}
+		});
+		
+		sendChatButton.setOnAction(e -> {
+			if (!messageField.getText().equals("")) {
+				clientCtrl.sendMessage(messageField.getText());
+				messageField.setText("");
+			}
+		});
+		
 		refreshButton.setOnAction(e -> {
 			stage.setScene(switcher.RoomScene(roomNum));
 		});
@@ -127,12 +186,14 @@ public class RoomView extends Pane{
 		directoryButton.setOnAction(e -> {
 			roomCtrl.removeFromBreakoutGroup();
 			dirCtrl.removeFromRoom();
+			clientCtrl.leaveRoom();
 			stage.setScene(switcher.DirectoryScene());
 		});
 		
 		logoutButton.setOnAction(e -> {
 			roomCtrl.removeFromBreakoutGroup();
 			dirCtrl.removeFromRoom();
+			clientCtrl.disconnect();
 			boolean logout = true;
 			stage.setScene(switcher.LoginScene(logout));
 		});
@@ -242,9 +303,26 @@ public class RoomView extends Pane{
 		
 		tutorInfoBox.getChildren().addAll(tutorBoxLabel, tutorNameLabel, coursesTextBox, statusLabel, tutorZoomButton);
 		
+		messageField.setEditable(true);
+		messageField.setPrefWidth(525);
+		displayChats.setPrefHeight(250);
+		displayChats.setEditable(false);
+		chatWindow.setContent(displayChats);
+		chatWindow.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        displayChats.setPrefWidth(525);
+
+        chatBox.setPadding(new Insets(10, 10, 10, 10));
+        chatBox.getChildren().add(displayChats);
+		createMessageBox.setPadding(new Insets(10, 10, 10, 10));
+		createMessageBox.getChildren().add(messageField);
+		sendMessageBox.setPadding(new Insets(10, 10, 10, 10));
+		sendMessageBox.getChildren().add(sendChatButton);
+		
 		chatPane.setPrefSize(650, 300);
-		chatPane.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, null, null)));
 		chatPane.setTranslateX(30);
+		chatPane.add(chatBox, 0, 0);
+		chatPane.add(createMessageBox, 0, 1);
+		chatPane.add(sendMessageBox, 1, 1);
 		chatPane.setStyle("-fx-padding: 10;" + 
                 "-fx-border-style: solid inside;" + 
                 "-fx-border-width: 2;" + 

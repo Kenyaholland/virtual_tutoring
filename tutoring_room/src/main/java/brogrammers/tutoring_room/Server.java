@@ -74,16 +74,18 @@ public class Server {
 						if (!message.equals("")) {
 							if (message.charAt(0) == '0') {
 								broadcast(username + " disconnected");
+								System.out.println(username + " left room " + room);
 								room = null;
-							} else if (message.charAt(0) == '1') {
+							} else if (message.charAt(0) == '1') {								
 								broadcast(username + " disconnected");
 								room = String.valueOf(message.substring(1));
+								System.out.println(username + " joined room " + room);
 								broadcast(username + " connected");
 							} else if (message.charAt(0) == '2') {
 								broadcast(username + ": " + message.substring(1));
 							}
 						}
-					} catch (IOException e) {
+					} catch (Exception e) {
 						break;
 					}
 				}
