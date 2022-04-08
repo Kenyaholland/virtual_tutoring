@@ -1,14 +1,15 @@
 package brogrammers.tutoring_room.views;
 
+import org.controlsfx.control.CheckComboBox;
 import brogrammers.tutoring_room.SceneSwitcher;
 import brogrammers.tutoring_room.data_access.UserDAO;
 import brogrammers.tutoring_room.reglogin.Registration;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -37,16 +38,16 @@ public class TutorRegView
 	private VBox root = new VBox();
 	private HBox name = new HBox();
 	private HBox buttons = new HBox();
-	@SuppressWarnings("rawtypes")
-	private ComboBox courses = new ComboBox();
-	//
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private CheckComboBox courses = new CheckComboBox(FXCollections.observableArrayList(SceneSwitcher.course_dao.getCourses()));
 	
 	private String firstName;
 	private String lastName;
 	private String username;
 	private String password;
 	private String email;
-	private String tutoringCourse;
+	@SuppressWarnings("rawtypes")
+	private ObservableList tutoringCourses;
 	
 	int success = -1;
 	
@@ -58,7 +59,6 @@ public class TutorRegView
 		init();
 	}
     
-    @SuppressWarnings("unchecked")
 	public void init()
     {
     	root.setAlignment(Pos.CENTER);
@@ -83,9 +83,7 @@ public class TutorRegView
     	username_field.setPromptText("Username");
     	password_field.setPromptText("Password");
     	email_field.setPromptText("Email Address");
-    	courses.setPromptText("Select Courses");
-    	
-    	courses.setItems(FXCollections.observableArrayList(SceneSwitcher.course_dao.getCourses()));
+    	courses.setTitle("Select Courses");
     	
     	firstName_field.setMaxWidth(256);
     	firstName_field.setMaxHeight(128);
@@ -130,8 +128,8 @@ public class TutorRegView
     boolean check_username;
 	boolean check_email;
     
-    public void getCredentials(@SuppressWarnings("rawtypes") ComboBox courses, TextField firstName_field, TextField lastName_field, TextField username_field, TextField password_field, TextField email_field)
-    {
+	public void getCredentials(@SuppressWarnings("rawtypes") CheckComboBox courses, TextField firstName_field, TextField lastName_field, TextField username_field, TextField password_field, TextField email_field)
+    {		
     	firstName = firstName_field.getText();
     	lastName = lastName_field.getText();
     	username = username_field.getText();
@@ -140,11 +138,16 @@ public class TutorRegView
     	
     	try
     	{
-    		tutoringCourse = courses.getValue().toString();
+    		tutoringCourses = courses.getCheckModel().getCheckedItems();
+    		
+    		if(tutoringCourses.size() == 0)
+    		{
+    			tutoringCourses = null;
+    		}
     	}
     	catch(Exception error)
     	{
-    		tutoringCourse = null;
+    		tutoringCourses = null;
     	}
     	
     	Alert alert = new Alert(AlertType.INFORMATION);
@@ -173,7 +176,7 @@ public class TutorRegView
 			e.printStackTrace();
 		}
     	
-    	if(firstName.trim().isEmpty() || lastName.trim().isEmpty() || username.trim().isEmpty() || password.trim().isEmpty() || email.trim().isEmpty() || tutoringCourse == null)
+    	if(firstName.trim().isEmpty() || lastName.trim().isEmpty() || username.trim().isEmpty() || password.trim().isEmpty() || email.trim().isEmpty() || tutoringCourses == null)
     	{
     		alert.setContentText("You have left one or more fields blank. Please make sure you have filled out all fields to complete your registration.");
     		alert.showAndWait();
@@ -220,7 +223,7 @@ public class TutorRegView
     		
     		if(registration.isValidCode(code))
     		{
-    			registerForApp(registration, tutoringCourse, firstName, lastName, username, password, email, code);
+    			registerForApp(registration, tutoringCourses, firstName, lastName, username, password, email, code);
     		}
     		else
     		{
@@ -230,13 +233,13 @@ public class TutorRegView
     	}
     }
     
-	public void registerForApp(Registration registration, String tutoringCourse, String firstName, String lastName, String username, String password, String email, String code)
+	public void registerForApp(Registration registration, @SuppressWarnings("rawtypes") ObservableList tutoringCourses, String firstName, String lastName, String username, String password, String email, String code)
     {
     	Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle("Registration Alert");
     	alert.setHeaderText("Information about your registration attempt");
     	
-    	if(registration.registerTutor(tutoringCourse, firstName, lastName, username, password, email, code) != null)
+    	if(registration.registerTutor(tutoringCourses, firstName, lastName, username, password, email, code) != null)
     	{
     		alert.setContentText("You have been successfully registered. You may now login.");
     	}

@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 import javax.mail.*;
 import javax.mail.internet.*;
 import brogrammers.tutoring_room.data_access.UserDAO;
+import javafx.collections.ObservableList;
+
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.PasswordAuthentication;
@@ -91,7 +93,7 @@ public class Registration
 		return null;
 	}
 	
-	public User registerTutor(String tutoringCourse, String firstName, String lastName, String userName, String password, String emailAddress, String enteredCode)
+	public User registerTutor(@SuppressWarnings("rawtypes") ObservableList tutoringCourses, String firstName, String lastName, String userName, String password, String emailAddress, String enteredCode)
 	{
 		if(isValidCode(enteredCode))
 		{
@@ -105,7 +107,11 @@ public class Registration
 			dbo.connectToDatabase();
 			
 			dbo.insertUser(user, pass);
-			dbo.insertTutor(userName, tutoringCourse);
+			
+			for(Object c : tutoringCourses)
+			{
+				dbo.insertTutor(userName, c.toString());
+			}
 			
 			dbo.closeConnection();
 			

@@ -119,7 +119,7 @@ public class UserDAO
 	{
 		try 
 		{
-			String query = "UPDATE courses " + "SET tutor=? WHERE crn=?";
+			String query = "INSERT INTO tutors " + "VALUES (?, ?)";
 			
 			PreparedStatement insert;
 			insert = connection.prepareStatement(query);
