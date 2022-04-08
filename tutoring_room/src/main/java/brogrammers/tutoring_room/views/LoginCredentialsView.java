@@ -2,7 +2,6 @@ package brogrammers.tutoring_room.views;
 
 import brogrammers.tutoring_room.SceneSwitcher;
 import brogrammers.tutoring_room.reglogin.Login;
-
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -58,6 +57,7 @@ public class LoginCredentialsView
     	
     	Hyperlink forgot_password = new Hyperlink("Forgot Password");
     	Hyperlink register = new Hyperlink("No Account? Click Here to Register");
+    	Hyperlink tutor_reg = new Hyperlink("I'm a tutor");
     	
     	TextField username_field = new TextField("");
     	PasswordField password_field = new PasswordField();
@@ -80,9 +80,14 @@ public class LoginCredentialsView
     	root.getChildren().add(buttons);
     	root.getChildren().add(forgot_password);
     	root.getChildren().add(register);
+    	root.getChildren().add(tutor_reg);
     	
     	login.setOnAction(e -> getCredentials(username_field, password_field));
+    	
+    	forgot_password.setOnAction(e -> stage.setScene(switcher.ChangePasswordScene()));
+    	
     	register.setOnAction(e -> stage.setScene(switcher.RegistrationScene()));
+    	tutor_reg.setOnAction(e -> stage.setScene(switcher.TutorRegistrationScene()));
     	
     	scene = new Scene(root, 1000, 500);
     }
@@ -95,15 +100,33 @@ public class LoginCredentialsView
     	loginToApp(username, password);
     }
     
+    private boolean checklogin = false;
+    
     public void loginToApp(String username, String password)
-    {
+    {	
     	Login login = new Login();
     	
-    	Alert alert = new Alert(AlertType.INFORMATION);
+    	Thread thread = new Thread(new Runnable()
+		{
+			public void run()
+			{
+				checklogin = login.login(username, password);
+			}
+		});
+		
+		thread.start();	
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle("Login Alert");
     	alert.setHeaderText("Information about your login attempt");
     	
-    	if(login.login(username, password))
+    	if(checklogin)
     	{
     		alert.setContentText("You have been successfully authenticated.");
     		switcher.openSession(username);
@@ -115,7 +138,7 @@ public class LoginCredentialsView
     	}
     	
     	alert.showAndWait();
-    }
+	}
     
     public Scene getScene()
     {

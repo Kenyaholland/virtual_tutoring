@@ -101,7 +101,7 @@ public class RegistrationView
     	root.getChildren().add(login);
     	
     	register.setOnAction(e -> getCredentials(firstName_field, lastName_field, username_field, password_field, email_field));
-    	login.setOnAction(e -> stage.setScene(switcher.LoginCredentialsScene()));
+    	login.setOnAction(e -> stage.setScene(switcher.LoginCredentialsScene(false)));
     	
     	scene = new Scene(root, 1000, 500);
     }

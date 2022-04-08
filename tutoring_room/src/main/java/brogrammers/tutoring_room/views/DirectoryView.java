@@ -2,6 +2,7 @@ package brogrammers.tutoring_room.views;
 
 import brogrammers.tutoring_room.SceneSwitcher;
 import brogrammers.tutoring_room.controllers.DirectoryController;
+import brogrammers.tutoring_room.data_access.UserDAO;
 
 import java.util.ArrayList;
 import javafx.geometry.Insets;
@@ -56,9 +57,8 @@ public class DirectoryView extends Pane{
 		
 		initializeVariables();
 		stylizeElements();
-		
 		assignSetOnActions();
-		populateChildren();
+		populateChildren();	
 	}
 	
 	public void initializeVariables()
@@ -94,7 +94,16 @@ public class DirectoryView extends Pane{
 	public void assignSetOnActions()
 	{
 		refreshButton.setOnAction(e -> {
-			stage.setScene(switcher.DirectoryScene());
+			Thread thread = new Thread(new Runnable()
+			{
+				public void run()
+				{
+					stage.setScene(switcher.DirectoryScene());
+				}
+			});
+			
+			thread.start();
+			//stage.setScene(switcher.DirectoryScene());
 		}); // refresh page
 		
 		logoutButton.setOnAction(e -> {

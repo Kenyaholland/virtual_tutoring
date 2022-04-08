@@ -1,7 +1,6 @@
 package brogrammers.tutoring_room.data_access;
 
 import brogrammers.tutoring_room.reglogin.User;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,11 +16,14 @@ import java.util.List;
  * 
  * Contains methods that allow database access for users table
  */
-public class UserDAO 
+public class UserDAO
 {
 	Connection connection;
 	
-	public UserDAO(){}
+	public UserDAO()
+	{
+		
+	}
 	
 	/**
 	 * Establishes a connection to the mySQL database
@@ -54,6 +56,27 @@ public class UserDAO
 		{
 			e.printStackTrace();
 		} 
+		return false;
+	}
+	
+	public boolean doesUserExist(String username, String email)
+	{
+		try
+		{
+			String query = "SELECT * FROM users WHERE username=? AND email=?";
+			
+			PreparedStatement select;
+			select = connection.prepareStatement(query);
+			
+			select.setString(1, username);
+			select.setString(2, email);
+			
+			ResultSet rs = select.executeQuery();
+			
+			return rs.next();
+		}
+		catch(Exception error){}
+		
 		return false;
 	}
 	
@@ -150,18 +173,19 @@ public class UserDAO
 	 * @param newPassword This is the new password
 	 * @return
 	 */
-	public boolean updatePassword(User user, String newPassword)
+	public boolean updatePassword(String username, String email, String password, String salt)
 	{
 		try 
 		{
-			String query = "UPDATE users SET password=? WHERE username=? AND email=?";
+			String query = "UPDATE users SET password=?, salt=? WHERE username=? AND email=?";
 			
 			PreparedStatement update;
 			update = connection.prepareStatement(query);
 			
-			update.setString(1, newPassword);
-			update.setString(2, user.getUserName());
-			update.setString(3, user.getEmailAddress());
+			update.setString(1, password);
+			update.setString(2, salt);
+			update.setString(3, username);
+			update.setString(4, email);
 			
 			update.executeUpdate();
 			

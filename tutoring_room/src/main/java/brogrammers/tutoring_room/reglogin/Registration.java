@@ -5,9 +5,7 @@ import java.util.regex.Pattern;
 
 import javax.mail.*;
 import javax.mail.internet.*;
-
 import brogrammers.tutoring_room.data_access.UserDAO;
-
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.PasswordAuthentication;
@@ -39,7 +37,17 @@ public class Registration
 	public Registration()
 	{
 		sh = new SecurityUtils();
-		dbo = new UserDAO();
+		
+		Thread thread = new Thread(new Runnable()
+		{
+			public void run()
+			{
+				dbo = new UserDAO();
+			}
+		});
+		
+		thread.start();
+		
 		pv = new PasswordValidator();
 	}
 	
@@ -119,6 +127,15 @@ public class Registration
 		}
 		
 		return true;
+	}
+	
+	public boolean validPassword(String password)
+	{
+		if(pv.isPasswordValid(password))
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean isInformationGood(String userName, String password, String emailAddress)

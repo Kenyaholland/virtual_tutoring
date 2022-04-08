@@ -2,6 +2,8 @@ package brogrammers.tutoring_room;
 
 import brogrammers.tutoring_room.controllers.SessionController;
 import brogrammers.tutoring_room.data_access.CoursesDAO;
+import brogrammers.tutoring_room.data_access.UserDAO;
+import brogrammers.tutoring_room.views.ChangePasswordView;
 import brogrammers.tutoring_room.views.DirectoryView;
 import brogrammers.tutoring_room.views.LoginCredentialsView;
 import brogrammers.tutoring_room.views.LoginView;
@@ -10,6 +12,8 @@ import brogrammers.tutoring_room.views.RoomView;
 import brogrammers.tutoring_room.views.TutorRegView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -23,6 +27,9 @@ public class SceneSwitcher extends Pane{
 	public ArrayList<RoomView> rooms;
 	
 	public static CoursesDAO course_dao = new CoursesDAO();
+	
+	public static HashSet<String> invalidUsernames;
+	public static HashSet<String> invalidEmails;
 	
 	public SceneSwitcher(Stage stage) 
 	{
@@ -60,7 +67,7 @@ public class SceneSwitcher extends Pane{
         return loginScene;
 	}
 	
-	public Scene LoginCredentialsScene() 
+	public Scene LoginCredentialsScene(boolean tutor) 
 	{
     	LoginCredentialsView loginCredView = new LoginCredentialsView(stage, this);
     	stage.setTitle("Sign in");
@@ -72,11 +79,32 @@ public class SceneSwitcher extends Pane{
         return loginCredScene;
 	}
 	
+	public Scene ChangePasswordScene()
+	{
+		ChangePasswordView changePasswordView = new ChangePasswordView(stage, this);
+		stage.setTitle("Forgot Password");
+		
+		Scene changepwScene = changePasswordView.getScene();
+		
+		return changepwScene;
+	}
+	
 	public Scene RegistrationScene() 
 	{
-    	//RegistrationView regView = new RegistrationView(stage, this);
+    	RegistrationView regView = new RegistrationView(stage, this);
+    	stage.setTitle("Register A Student Account");
+ 
+        Scene regScene = regView.getScene();
+        
+        //loginCredScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
+
+        return regScene;
+	}
+	
+	public Scene TutorRegistrationScene() 
+	{
 		TutorRegView regView = new TutorRegView(stage, this);
-    	stage.setTitle("Sign in");
+    	stage.setTitle("Register A Tutor Account");
  
         Scene regScene = regView.getScene();
         

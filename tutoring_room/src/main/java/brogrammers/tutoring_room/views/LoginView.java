@@ -1,5 +1,6 @@
 package brogrammers.tutoring_room.views;
 
+import brogrammers.tutoring_room.App;
 import brogrammers.tutoring_room.SceneSwitcher;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -114,7 +115,7 @@ public class LoginView extends Pane{
 	}
 	
 	public void assignSetOnActions()
-	{
+	{	
 		signInButton.setOnAction(e -> { 
 			if(schoolDropDown.getValue() ==  "Select") {
 				Alert alert = new Alert(AlertType.ERROR);
@@ -123,8 +124,10 @@ public class LoginView extends Pane{
 		    	alert.setContentText("Must select a University from the drop-down menu.");
 		    	alert.showAndWait();
 			}
-			else {
-				stage.setScene(switcher.LoginCredentialsScene());
+			else 
+			{
+				//System.out.println("Test: " + App.tutor);
+				stage.setScene(switcher.LoginCredentialsScene(false));
 			}
 		});
 		// rooms array from SceneSwitcher is public to be used here to set the label texts

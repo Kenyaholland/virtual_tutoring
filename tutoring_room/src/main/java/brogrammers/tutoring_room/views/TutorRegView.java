@@ -1,7 +1,7 @@
 package brogrammers.tutoring_room.views;
 
 import brogrammers.tutoring_room.SceneSwitcher;
-import brogrammers.tutoring_room.data_access.CoursesDAO;
+import brogrammers.tutoring_room.data_access.UserDAO;
 import brogrammers.tutoring_room.reglogin.Registration;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
@@ -31,12 +31,15 @@ public class TutorRegView
 {
 	private Stage stage;
 	private SceneSwitcher switcher;
+	private Registration registration = new Registration();
 	
 	private Scene scene;
 	private VBox root = new VBox();
 	private HBox name = new HBox();
 	private HBox buttons = new HBox();
+	@SuppressWarnings("rawtypes")
 	private ComboBox courses = new ComboBox();
+	//
 	
 	private String firstName;
 	private String lastName;
@@ -55,7 +58,8 @@ public class TutorRegView
 		init();
 	}
     
-    public void init()
+    @SuppressWarnings("unchecked")
+	public void init()
     {
     	root.setAlignment(Pos.CENTER);
     	buttons.setAlignment(Pos.CENTER);
@@ -118,44 +122,74 @@ public class TutorRegView
     	root.getChildren().add(login);
     	
     	register.setOnAction(e -> getCredentials(courses, firstName_field, lastName_field, username_field, password_field, email_field));
-    	login.setOnAction(e -> stage.setScene(switcher.LoginCredentialsScene()));
+    	login.setOnAction(e -> stage.setScene(switcher.LoginCredentialsScene(false)));
     	
     	scene = new Scene(root, 1000, 500);
     }
     
-    public void getCredentials(ComboBox courses, TextField firstName_field, TextField lastName_field, TextField username_field, TextField password_field, TextField email_field)
+    boolean check_username;
+	boolean check_email;
+    
+    public void getCredentials(@SuppressWarnings("rawtypes") ComboBox courses, TextField firstName_field, TextField lastName_field, TextField username_field, TextField password_field, TextField email_field)
     {
-    	Registration registration = new Registration();
-    	
     	firstName = firstName_field.getText();
     	lastName = lastName_field.getText();
     	username = username_field.getText();
     	password = password_field.getText();
     	email = email_field.getText();
-    	tutoringCourse = courses.getValue().toString();
     	
-    	boolean check_username = registration.doesUserNameAlreadyExist(username);
-    	boolean check_email = registration.doesEmailAlreadyExist(email);
-    	boolean check_email_validity = registration.isEmailValid(email);
-    	boolean check_password = registration.isInformationGood(username, password, email);
+    	try
+    	{
+    		tutoringCourse = courses.getValue().toString();
+    	}
+    	catch(Exception error)
+    	{
+    		tutoringCourse = null;
+    	}
     	
     	Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle("Registration Alert");
     	alert.setHeaderText("Information about your registration attempt");
     	
-    	TextInputDialog code_field = new TextInputDialog();
+    	boolean check_email_validity = registration.isEmailValid(email);
     	
-    	if(check_username)
+    	Thread thread = new Thread(new Runnable()
+		{
+			public void run()
+			{
+				UserDAO temp = new UserDAO();
+				temp.connectToDatabase();
+				check_username = temp.checkExistenceOfUserName(username);
+				check_email = temp.checkExistenceOfEmail(email);
+				temp.closeConnection();
+			}
+		});
+		
+		thread.start();	
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	if(firstName.trim().isEmpty() || lastName.trim().isEmpty() || username.trim().isEmpty() || password.trim().isEmpty() || email.trim().isEmpty() || tutoringCourse == null)
     	{
-        	alert.setContentText("The username you have entered is unavailable.");
+    		alert.setContentText("You have left one or more fields blank. Please make sure you have filled out all fields to complete your registration.");
+    		alert.showAndWait();
+    		return;
+    	}
+    	else if(check_username)
+    	{
+    		alert.setContentText("The username you have entered is unavailable.");
+    		alert.showAndWait();
     	}
     	else if(check_email || !check_email_validity)
     	{
     		alert.setContentText("The email address you have entered is either unavailable or is invalid. Make sure that you have entered a valid .edu email address to complete your registration.");
-    		
     		alert.showAndWait();
     	}
-    	else if(!check_password)
+    	else if(!(registration.validPassword(password)))
     	{
     		alert.setContentText("Invalid password. Passwords must be at-least 8 characters in length, "
     				+ "contain a mix of upper and lower case characters, at-least one digit (0-9), and at-least one of the following special characters !@#?]");
@@ -164,11 +198,21 @@ public class TutorRegView
     	}
     	else
     	{
+    		TextInputDialog code_field = new TextInputDialog();
+    		
     		code_field.setTitle("Registration Alert");
     		code_field.setHeaderText("Information about your registration attempt");
     		code_field.setContentText("A verification code has been sent to the email provided, enter it in the provided field to complete your registration.");
     		
-    		registration.sendVerificationCode(email, username);
+    		Thread thread2 = new Thread(new Runnable()
+    		{
+    			public void run()
+    			{
+    				registration.sendVerificationCode(email, username);
+    			}
+    		});
+    		
+    		thread2.start();
     		
     		code_field.showAndWait();
     		
