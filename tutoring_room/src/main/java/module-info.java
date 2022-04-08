@@ -7,6 +7,8 @@ module brogrammers.tutoring_room {
 	requires transitive javafx.controls;
 	requires javafx.base;
 	requires org.controlsfx.controls;
+	requires java.net.http;
+	requires json;
 	//requires mysql.connector.java;
     exports brogrammers.tutoring_room;
 }
