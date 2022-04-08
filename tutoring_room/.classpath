@@ -19,22 +19,27 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="commons-lang3-3.12.0.jar">
+	<classpathentry kind="lib" path="commons-lang3-3.12.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="javax.mail-1.6.2.jar">
+	<classpathentry kind="lib" path="javax.mail-1.6.2.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="mysql-connector-java-8.0.28.jar">
+	<classpathentry kind="lib" path="mysql-connector-java-8.0.28.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="ojdbc11.jar">
+	<classpathentry kind="lib" path="ojdbc11.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/jared/git/virtual_tutoring/tutoring_room/controlsfx-11.1.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

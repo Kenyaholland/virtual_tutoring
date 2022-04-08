@@ -5,8 +5,8 @@ import java.util.regex.Pattern;
 
 import javax.mail.*;
 import javax.mail.internet.*;
-
 import brogrammers.tutoring_room.data_access.UserDAO;
+import javafx.collections.ObservableList;
 
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -27,6 +27,8 @@ public class Registration
 	private UserDAO dbo;
 	private PasswordValidator pv;
 	
+	private String firstName;
+	private String lastName;
 	private String userName;
 	private String password;
 	private String emailAddress;
@@ -37,7 +39,17 @@ public class Registration
 	public Registration()
 	{
 		sh = new SecurityUtils();
-		dbo = new UserDAO();
+		
+		Thread thread = new Thread(new Runnable()
+		{
+			public void run()
+			{
+				dbo = new UserDAO();
+			}
+		});
+		
+		thread.start();
+		
 		pv = new PasswordValidator();
 	}
 	
@@ -55,11 +67,11 @@ public class Registration
 	{
 		if(isInformationGood(userName, password, emailAddress))
 		{
-			register(userName, password, emailAddress, enteredCode);
+			register(firstName, lastName, userName, password, emailAddress, enteredCode);
 		}
 	}
 	
-	public User register(String userName, String password, String emailAddress, String enteredCode)
+	public User register(String firstName, String lastName, String userName, String password, String emailAddress, String enteredCode)
 	{
 		if(isValidCode(enteredCode))
 		{
@@ -68,11 +80,38 @@ public class Registration
 			
 			String pass = hash.concat(salt);
 			
-			User user = new User(userName, salt, emailAddress, "Student");
+			User user = new User(firstName, lastName, userName, salt, emailAddress, "Student");
 			
 			dbo.connectToDatabase();
 			
 			dbo.insertUser(user, pass);
+			
+			dbo.closeConnection();
+			
+			return user;
+		}
+		return null;
+	}
+	
+	public User registerTutor(@SuppressWarnings("rawtypes") ObservableList tutoringCourses, String firstName, String lastName, String userName, String password, String emailAddress, String enteredCode)
+	{
+		if(isValidCode(enteredCode))
+		{
+			String hash = sh.hashPassword(password);
+			String salt = sh.generateSalt();
+			
+			String pass = hash.concat(salt);
+			
+			User user = new User(firstName, lastName, userName, salt, emailAddress, "Tutor");
+			
+			dbo.connectToDatabase();
+			
+			dbo.insertUser(user, pass);
+			
+			for(Object c : tutoringCourses)
+			{
+				dbo.insertTutor(userName, c.toString());
+			}
 			
 			dbo.closeConnection();
 			
@@ -94,6 +133,15 @@ public class Registration
 		}
 		
 		return true;
+	}
+	
+	public boolean validPassword(String password)
+	{
+		if(pv.isPasswordValid(password))
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean isInformationGood(String userName, String password, String emailAddress)
