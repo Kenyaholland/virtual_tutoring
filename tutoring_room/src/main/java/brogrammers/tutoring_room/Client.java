@@ -20,31 +20,19 @@ public class Client {
 			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		} catch (IOException e) {
+			System.out.println("Failed to connect to server");
 			close();
 		}
 	}
 	
-	// send a message
-	public Boolean send(String message) {
-		try {
-			bufferedWriter.write(message);
-			bufferedWriter.newLine();
-			bufferedWriter.flush();
-			return true;
-		} catch (IOException e) {
-			close();
-		}
-		return false;
+	public void send(String message) throws IOException {
+		bufferedWriter.write(message);
+		bufferedWriter.newLine();
+		bufferedWriter.flush();
 	}
 	
-	// get latest message
-	public String receive() {
-		try {
-			return bufferedReader.readLine();
-		} catch (IOException e) {
-			close();
-		}
-		return null;
+	public String receive() throws IOException {
+		return bufferedReader.readLine();
 	}
 	
 	public void close() {
@@ -56,46 +44,37 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) {
-				
-		// get our client's user-name
 		Scanner scanner = new Scanner(System.in);
-		System.out.print("username: ");
+		System.out.print("Username: ");
 		String username = scanner.nextLine();
-		System.out.print("room number: ");
-		String roomNumber = scanner.nextLine();
 		
-		// connect to the server
 		Client client = new Client("localhost", 55555);
 		
-		// send the server our user name and room number (this is protocol for our server)
-		client.send(username);
-		client.send(roomNumber);
-		
-		// print incoming messages (threaded so we are not blocked)
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				String message;
-				while (!Thread.interrupted()) {
-					message = client.receive();
-					if (message != null) {
-						System.out.println(message);
-					} else {
-						break;
+				try {
+					while (true) {
+						System.out.println(client.receive());	
 					}
+				} catch (IOException e) {
+					client.close();
 				}
 			}
 		}).start();	
 		
-		// send console input
-		String message;
-		while (!(message = scanner.nextLine()).equals("")) {
-			if (!client.send(message)) {
-				break;
+		try {
+			client.send(username);
+			
+			while (true) {
+				client.send(scanner.nextLine());
 			}
-		}
-		scanner.close();
+		} catch (IOException e) {
+			client.close();
+		} finally {
+			scanner.close();
+		}		
 	}
 }

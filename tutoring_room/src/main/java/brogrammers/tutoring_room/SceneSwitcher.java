@@ -1,5 +1,6 @@
 package brogrammers.tutoring_room;
 
+import brogrammers.tutoring_room.controllers.ClientController;
 import brogrammers.tutoring_room.controllers.SessionController;
 import brogrammers.tutoring_room.data_access.CoursesDAO;
 import brogrammers.tutoring_room.data_access.UserDAO;
@@ -24,7 +25,8 @@ import javafx.stage.Stage;
 public class SceneSwitcher extends Pane{
 	private Stage stage;
 	private SessionController sessionCtrl;
-	public ArrayList<RoomView> rooms;
+	private ClientController clientCtrl;
+	private ArrayList<RoomView> rooms;
 	
 	public static CoursesDAO course_dao = new CoursesDAO();
 	
@@ -44,7 +46,7 @@ public class SceneSwitcher extends Pane{
 	
 	public void makeRoom(int roomNum, String sessionId) 
 	{
-		RoomView roomView = new RoomView(stage, this, roomNum, sessionId);
+		RoomView roomView = new RoomView(stage, this, clientCtrl, roomNum, sessionId);
 		rooms.add(roomNum-1, roomView);
 	}
 	
@@ -139,6 +141,8 @@ public class SceneSwitcher extends Pane{
         Scene roomScene = new Scene(roomVBox, 1000, 600);
         stage.setTitle("Virtual Tutoring");
         
+        clientCtrl.joinRoom(String.valueOf(roomNum));
+        
         //directoryViewScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
         
         return roomScene;
@@ -148,11 +152,14 @@ public class SceneSwitcher extends Pane{
 	{
 		this.sessionCtrl = new SessionController(username);
 		sessionCtrl.openSession();
+		clientCtrl = new ClientController("localhost", 55555);
+		clientCtrl.sendUsername(username);
 	}
 	
 	public void closeSession()
 	{
 		sessionCtrl.closeSession();
+		clientCtrl.disconnect();
 	}
 	
 	public boolean checkActiveSession()
