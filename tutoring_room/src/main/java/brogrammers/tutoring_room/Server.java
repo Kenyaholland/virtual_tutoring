@@ -9,12 +9,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class ChatServer {
+public class Server {
 
 	private ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
 	private ServerSocket serverSocket;
 	
-	public ChatServer(int port) {
+	public Server(int port) {
 		try {
 			serverSocket = new ServerSocket(port);
 			System.out.println("Server ready");
@@ -137,6 +137,6 @@ public class ChatServer {
 	}
 	
 	public static void main(String[] args) {
-		new ChatServer(55555);
+		new Server(55555);
 	}
 }
