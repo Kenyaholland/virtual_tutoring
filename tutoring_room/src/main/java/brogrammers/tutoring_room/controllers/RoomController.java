@@ -21,11 +21,6 @@ public class RoomController {
 		room.removeActiveUserFromGroup();
 	}
 	
-	public void removeFromRoom()
-	{
-		room.removeActiveUser();
-	}
-	
 	public String getGroupMembers(int groupNum)
 	{
 		final int MAX_CHAR = 50;

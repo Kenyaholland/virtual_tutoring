@@ -115,11 +115,10 @@ public class RegistrationView
     	username = username_field.getText();
     	password = password_field.getText();
     	email = email_field.getText();
-    	
-    	boolean check_username = registration.doesUserNameAlreadyExist(username);
-    	boolean check_email = registration.doesEmailAlreadyExist(email);
-    	boolean check_email_validity = registration.isEmailValid(email);
-    	boolean check_password = registration.isInformationGood(username, password, email);
+    
+    	boolean check_username = registration.isValidUsername(username);
+    	boolean check_email = registration.isValidEmail(email);
+    	boolean check_password = registration.isValidPassword(password);
     	
     	Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle("Registration Alert");
@@ -127,11 +126,11 @@ public class RegistrationView
     	
     	TextInputDialog code_field = new TextInputDialog();
     	
-    	if(check_username)
+    	if(!check_username)
     	{
         	alert.setContentText("The username you have entered is unavailable.");
     	}
-    	else if(check_email || !check_email_validity)
+    	else if(!check_email)
     	{
     		alert.setContentText("The email address you have entered is either unavailable or is invalid. Make sure that you have entered a valid .edu email address to complete your registration.");
     		
@@ -158,7 +157,7 @@ public class RegistrationView
     		
     		if(registration.isValidCode(code))
     		{
-    			registerForApp(registration, firstName, lastName, username, password, email, code);
+    			registerForApp(registration, firstName, lastName, username, password, email);
     		}
     		else
     		{
@@ -168,13 +167,13 @@ public class RegistrationView
     	}
     }
     
-	public void registerForApp(Registration registration, String firstName, String lastName, String username, String password, String email, String code)
+	public void registerForApp(Registration registration, String firstName, String lastName, String username, String password, String email)
     {
     	Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle("Registration Alert");
     	alert.setHeaderText("Information about your registration attempt");
     	
-    	if(registration.register(firstName, lastName, username, password, email, code) != null)
+    	if(registration.register(firstName, lastName, username, password, email) != null)
     	{
     		alert.setContentText("You have been successfully registered. You may now login.");
     	}

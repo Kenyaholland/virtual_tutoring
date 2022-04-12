@@ -26,73 +26,64 @@ public class Registration
 	private SecurityUtils sh;
 	private UserDAO dbo;
 	private PasswordValidator pv;
-	
-	private String firstName;
-	private String lastName;
-	private String userName;
-	private String password;
-	private String emailAddress;
-	
-	private String enteredCode;
 	private String code;
 	
 	public Registration()
 	{
 		sh = new SecurityUtils();
-		
-		Thread thread = new Thread(new Runnable()
-		{
-			public void run()
-			{
-				dbo = new UserDAO();
-			}
-		});
-		
-		thread.start();
+		dbo = new UserDAO();
+//		Thread thread = new Thread(new Runnable()
+//		{
+//			public void run()
+//			{
+//				dbo = new UserDAO();
+//			}
+//		});
+//		
+//		thread.start();
 		
 		pv = new PasswordValidator();
 	}
 	
-	public void setUserName(String userName)
+	
+	/**
+	 * Registers a student user into the database
+	 * @param firstName student's first name
+	 * @param lastName student's last name
+	 * @param userName student's username
+	 * @param password student's password
+	 * @param emailAddress student's email
+	 * @return a User if student is successfully registered, null if unsuccessful
+	 */
+	public User register(String firstName, String lastName, String userName, String password, String emailAddress)
 	{
-		this.userName = userName;
+		String hash = sh.hashPassword(password);
+		String salt = sh.generateSalt();
+			
+		String pass = hash.concat(salt);
+			
+		User user = new User(firstName, lastName, userName, salt, emailAddress, "Student");
+			
+		dbo.connectToDatabase();
+			
+		dbo.insertUser(user, pass);
+			
+		dbo.closeConnection();
+			
+		return user;
 	}
 	
-	public String getUserName()
-	{
-		return this.userName;
-	}
-	
-	public void registerUser()
-	{
-		if(isInformationGood(userName, password, emailAddress))
-		{
-			register(firstName, lastName, userName, password, emailAddress, enteredCode);
-		}
-	}
-	
-	public User register(String firstName, String lastName, String userName, String password, String emailAddress, String enteredCode)
-	{
-		if(isValidCode(enteredCode))
-		{
-			String hash = sh.hashPassword(password);
-			String salt = sh.generateSalt();
-			
-			String pass = hash.concat(salt);
-			
-			User user = new User(firstName, lastName, userName, salt, emailAddress, "Student");
-			
-			dbo.connectToDatabase();
-			
-			dbo.insertUser(user, pass);
-			
-			dbo.closeConnection();
-			
-			return user;
-		}
-		return null;
-	}
-	
+	/**
+	 * Registers a tutor user into the database
+	 * @param tutoringCourses list of CRNs that the tutor helps with
+	 * @param firstName tutor's first name
+	 * @param lastName tutor's last name
+	 * @param userName tutor's username
+	 * @param password tutor's password
+	 * @param emailAddress tutor's email
+	 * @param enteredCode user-entered verification code
+	 * @return a User if tutor is successfully registered, null if unsuccessful
+	 */
 	public User registerTutor(@SuppressWarnings("rawtypes") ObservableList tutoringCourses, String firstName, String lastName, String userName, String password, String emailAddress, String enteredCode)
 	{
 		if(isValidCode(enteredCode))
@@ -120,7 +111,12 @@ public class Registration
 		return null;
 	}
 	
-	public boolean isUserNameValid(String userName)
+	/**
+	 * Checks validity of user-entered username
+	 * @param userName username entered
+	 * @return true if username is valid, false if not
+	 */
+	public boolean isValidUsername(String userName)
 	{
 		if(userName.length() < MIN_USERNAME_LENGTH || userName.length() > MAX_USERNAME_LENGTH)
 		{
@@ -135,30 +131,11 @@ public class Registration
 		return true;
 	}
 	
-	public boolean validPassword(String password)
-	{
-		if(pv.isPasswordValid(password))
-		{
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean isInformationGood(String userName, String password, String emailAddress)
-	{
-		if(!doesUserNameAlreadyExist(userName))
-		{
-			if(!doesEmailAlreadyExist(emailAddress))
-			{
-				if(pv.isPasswordValid(password))
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
+	/**
+	 * Checks if user with given username exists in database
+	 * @param userName username to look for
+	 * @return true if user with given username exists already, false if not
+	 */
 	public boolean doesUserNameAlreadyExist(String userName)
 	{
 		dbo.connectToDatabase();
@@ -174,6 +151,31 @@ public class Registration
 		return false;
 	}
 	
+	/**
+	 * Checks if email is valid format
+	 * @param emailAddress email address to validate
+	 * @return true if email is valid, false if not
+	 */
+	public boolean isValidEmail(String emailAddress)
+	{	
+		if(!Pattern.matches(".*@.*.edu", emailAddress))
+		{
+			return false;
+		}
+		
+		if (doesEmailAlreadyExist(emailAddress))
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Checks if a user with the given email exists in the database
+	 * @param emailAddress email address
+	 * @return true if email exists, false if not
+	 */
 	public boolean doesEmailAlreadyExist(String emailAddress)
 	{
 		dbo.connectToDatabase();
@@ -189,16 +191,47 @@ public class Registration
 		return false;
 	}
 	
-	public boolean isEmailValid(String emailAddress)
-	{	
-		if(Pattern.matches(".*@.*.edu", emailAddress))
+	/**
+	 * Checks validity of user-entered password
+	 * @param password password entered
+	 * @return true if password is valid, false if not
+	 */
+	public boolean isValidPassword(String password)
+	{
+		if(pv.isPasswordValid(password))
 		{
 			return true;
 		}
-		
 		return false;
 	}
 	
+	/**
+	 * Checks that user-entered registration info is valid
+	 * @param userName username entered
+	 * @param password password entered
+	 * @param emailAddress email entered
+	 * @return true if all fields are valid, false if at least one field is invalid
+	 */
+	public boolean isInformationGood(String userName, String password, String emailAddress)
+	{
+		if(!doesUserNameAlreadyExist(userName))
+		{
+			if(!doesEmailAlreadyExist(emailAddress) && isValidEmail(emailAddress)) 
+			{
+				if(pv.isPasswordValid(password))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Uses smtp to send an account verification code to user's email
+	 * @param emailAddress user's email address (destination)
+	 * @param username user's username
+	 */
 	public void sendVerificationCode(String emailAddress, String username)
 	{
 		String sender = "TheBrogrammers.VirtualTutoring@gmail.com";
@@ -244,6 +277,11 @@ public class Registration
 	    }
 	}
 	
+	/**
+	 * Checks that verification code entered by user matches the code sent
+	 * @param enteredCode code entered by user
+	 * @return true if codes match, false if not
+	 */
 	public boolean isValidCode(String enteredCode)
 	{
 		if(enteredCode.contentEquals(code))
