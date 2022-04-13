@@ -1,12 +1,12 @@
 package brogrammers.tutoring_room.controllers;
 
-import brogrammers.tutoring_room.Client;
+import brogrammers.tutoring_room.ChatClient;
 
 public class ClientController {
-	private Client client;
+	private ChatClient client;
 	
 	public ClientController(String address, int port) {
-		client = new Client(address, port);
+		client = new ChatClient(address, port);
 	}
 	public void sendUsername(String username) {
 		try {

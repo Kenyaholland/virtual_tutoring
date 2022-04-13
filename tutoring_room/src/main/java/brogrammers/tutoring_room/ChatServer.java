@@ -17,7 +17,7 @@ public class ChatServer {
 	public ChatServer(int port) {
 		try {
 			serverSocket = new ServerSocket(port);
-			System.out.println("Server ready");
+			System.out.println("Chat server ready");
 			
 			while (true) {
 				Socket socket = serverSocket.accept();

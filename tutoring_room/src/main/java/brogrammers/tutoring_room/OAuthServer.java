@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import org.json.JSONObject;
+
 
 /*
  * Setup
@@ -37,118 +37,168 @@ import org.json.JSONObject;
  * 
  * 7. Run this Oauth server below, this server is set to run on port 55556
  * 
- * 8. Make a GET request to this server to receive zoom's redirect url
- * This can be done by opening your browser to localhost:55556
- * The browser will automatically redirect the received url
- * But this will need to be done by our app
- * This can be implemented using a state query (this is not yet implemented)***
- * 
- * 9. The rest is done automatically
- * After the client authorizes the app, zoom will send a request to this server
- * Zoom's request will contain a code query
- * With the code query, this server will send another request to zoom
- * Asking to exchange the code for an access token
- * Zoom will then send the access token back to this server
- * The access token is used to send GET requests to zoom to access user information
+ * 8. Run the Oauth client
+ * 		(the client does not check if an access code exists atm, it just assumes)****
  */
 
 public class OAuthServer {
-	
-	/* these cannot be stored here
-	 * they must be placed in a .gitignore file
-	 */
+	// these need to be placed in a .gitignore
 	static final String clientID = "";
 	static final String clientSecret = "";
 	static final String redirectURL = "";
 	
+	private ServerSocket serverSocket;
+	private Map<String, String> clientCodes;
+	
 	public OAuthServer(int port) {	
-		// start server
-		try (ServerSocket serverSocket = new ServerSocket(port)) {
-			System.out.println("OAuth server running on port: " + port);
+		try {
+			// start server
+			serverSocket = new ServerSocket(port);
+			clientCodes = new HashMap<String, String>();
+			System.out.println("OAuth server ready");
 			
-			// create a client for sending requests
-	        HttpClient httpClient = HttpClient.newBuilder()
-	                .version(HttpClient.Version.HTTP_2)
-	                .build();
-			
-			// begin listening
+			// handle incoming requests
 			while (true) {
-				// accept incoming socket
 				Socket socket = serverSocket.accept();
-				
-				// create streams
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                
-                // parse HTTP request
-                String request = bufferedReader.readLine();
-                String[] requestArray = request.split(" ");
-                System.out.println(Arrays.toString(requestArray));
-                
-                // get query parameters
-                String route = requestArray[1];
-                Map<String, String> paramsMap = new HashMap<String, String>();
-            	if (route.contains("?")) {
-            		String params = route.substring(route.indexOf("?") + 1);
-            		String[] paramsArray = params.split("&");
-            		for (String param : paramsArray) {
-            			String[] split = param.split("=");
-            			if (split.length == 2) {
-            				paramsMap.put(split[0], split[1]);	
-            			}
-            		}
-            	}
-            	
-        		if (paramsMap.containsKey("code")) {
-        			/* when we receive a URL with a code query
-        			 * we must exchange the code for an access token
-        			 * by sending a request to zoom with the code
-        			 */	
-                	try {
-                		// encode the authorization code
-                        String basic = clientID + ":" + clientSecret;
-                        String encoded = Base64.getEncoder().encodeToString(basic.getBytes());
-                        String body = "grant_type=authorization_code&code=" + paramsMap.get("code") + "&redirect_uri=" + redirectURL;
-                        
-                        // build the post request
-                        HttpRequest req = HttpRequest.newBuilder()
-                                .uri(URI.create("https://zoom.us/oauth/token"))
-                                .setHeader("Authorization", "Basic " + encoded)
-                                .setHeader("Content-Type", "application/x-www-form-urlencoded")
-                                .POST(HttpRequest.BodyPublishers.ofString(body))
-                                .build();
-                        
-                        // send the post request to zoom
-                        HttpResponse<String> response = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
-                        JSONObject json = new JSONObject(response.body());
-                        
-                        // send zoom's response back to requesting client
-                    	bufferedWriter.write("HTTP/1.1 200 OK" + "\r\n"
-                    			+ "Content-Type: application/json" + "\r\n"
-                    			+ "\r\n");
-                    	bufferedWriter.write(json.toString(4));
-                    	bufferedWriter.flush();
-
-                	} catch (InterruptedException e) {
-                		e.printStackTrace();
-                	}
-        		} else {
-        			/* redirect the client to zoom with our info
-        			 * after the client accepts authorization,
-        			 * zoom will send a request to our server with a code query
-        			 */
-                	bufferedWriter.write("HTTP/1.1 302 Found\r\n"
-                			+ "Location: https://zoom.us/oauth/authorize?response_type=code&client_id=" + clientID + "&redirect_uri=" + redirectURL + "\r\n"
-                			+ "\r\n");
-                	bufferedWriter.flush();
-        		}
-                socket.close();
+				RequestHandler clientHandler = new RequestHandler(socket);		
+				Thread thread = new Thread(clientHandler);
+				thread.start();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (serverSocket != null) {
+					serverSocket.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
-	public static void main(String[] args) throws IOException, InterruptedException {
+	public class RequestHandler implements Runnable {
+		
+		private Socket socket;
+		private BufferedReader bufferedReader;
+		private BufferedWriter bufferedWriter;
+		
+		public RequestHandler(Socket socket) {
+			try {
+				this.socket = socket;
+				bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			} catch (IOException e) {
+				e.printStackTrace();
+				close();
+			}
+		}
+
+		@Override
+		public void run() {
+			try {
+				// parse request
+				String request = bufferedReader.readLine();
+				String[] requestArray = request.split(" ");
+				System.out.println(Arrays.toString(requestArray));
+				
+				if (requestArray.length == 3 && requestArray[1].contains("?")) {
+					
+					// parse query parameters
+					Map<String, String> paramMap = new HashMap<String, String>();
+					String[] pathArray = requestArray[1].split("\\?");
+            		String[] paramsArray = pathArray[1].split("&");
+            		for (String s : paramsArray) {
+            			String[] split = s.split("=");
+            			if (split.length == 2) {
+            				paramMap.put(split[0], split[1]);	
+            			}
+            		}
+					if (paramMap.containsKey("state")) {
+						if (requestArray[0].equals("GET")) {
+							if (pathArray[0].equals("/")) {
+								if (paramMap.containsKey("code")) {
+									// zoom sent a code to this server
+									clientCodes.put(paramMap.get("state"), paramMap.get("code"));
+			                    	bufferedWriter.write("HTTP/1.1 200 OK\r\n"
+			                    			+ "Content-Type: text/plain"
+			                    			+ "\r\n\r\n");
+			                    	bufferedWriter.write("insert thank you page here");
+			                    	bufferedWriter.flush();
+								}
+							} else if (pathArray[0].equals("/auth")) {
+								// client needs to generate an access code
+		                    	bufferedWriter.write("HTTP/1.1 302 Found\r\n"
+		                    			+ "Location: https://zoom.us/oauth/authorize"
+		                    			+ "?response_type=code"
+		                    			+ "&client_id=" + clientID
+		                    			+ "&redirect_uri=" + redirectURL
+		                    			+ "&state=" + paramMap.get("state")
+		                    			+ "\r\n\r\n");
+		                    	bufferedWriter.flush();
+							} else if (pathArray[0].equals("/code")) {
+								if (clientCodes.containsKey(paramMap.get("state"))) {
+									// client requests their access code
+			                    	bufferedWriter.write("HTTP/1.1 200 OK\r\n"
+			                    			+ "Content-Type: text/plain"
+			                    			+ "\r\n\r\n");
+			                    	bufferedWriter.write(clientCodes.get(paramMap.get("state")));
+			                    	bufferedWriter.flush();
+								}
+							} else if (pathArray[0].equals("/token")) {
+								if (paramMap.containsKey("code")) {
+									// client requests their access token
+									
+									// generate encoded code
+									String basic = clientID + ":" + clientSecret;
+			                        String encoded = Base64.getEncoder().encodeToString(basic.getBytes());
+			                        String body = "grant_type=authorization_code&code=" + paramMap.get("code") + "&redirect_uri=" + redirectURL;
+			                        
+			                        // build POST request
+			                        HttpRequest httpRequest = HttpRequest.newBuilder()
+			                                .uri(URI.create("https://zoom.us/oauth/token"))
+			                                .setHeader("Authorization", "Basic " + encoded)
+			                                .setHeader("Content-Type", "application/x-www-form-urlencoded")
+			                                .POST(HttpRequest.BodyPublishers.ofString(body))
+			                                .build();
+			                        
+			                        // send the request to zoom
+			                        HttpClient httpClient = HttpClient.newHttpClient();
+			                        HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+			                        // send zoom's response to requesting client
+			                    	bufferedWriter.write("HTTP/1.1 200 OK" + "\r\n"
+			                    			+ "Content-Type: text/plain" + "\r\n"
+			                    			+ "\r\n");
+			                    	bufferedWriter.write(response.body());
+			                    	bufferedWriter.flush();	
+								}
+							}
+						}
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}			
+		public void close() {
+			try {
+				if (socket != null) {
+					socket.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	public static void main(String[] args) {
 		new OAuthServer(55556);
 	}
 }

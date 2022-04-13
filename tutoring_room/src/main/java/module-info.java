@@ -9,6 +9,7 @@ module brogrammers.tutoring_room {
 	requires org.controlsfx.controls;
 	requires java.net.http;
 	requires json;
+	requires java.desktop;
 	//requires mysql.connector.java;
     exports brogrammers.tutoring_room;
 }
