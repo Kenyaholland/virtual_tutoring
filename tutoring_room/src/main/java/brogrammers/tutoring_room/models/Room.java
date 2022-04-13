@@ -103,7 +103,7 @@ public class Room {
 		System.out.println("Added group " + groupNum + " for user " + username + " - Click refresh to update page");
 		sdao.closeConnection();
 		udao.closeConnection();
-		breakoutGroups.get(groupNum-1).addUser(username);
+		//breakoutGroups.get(groupNum-1).addStudent(username);
 	}
 	
 	/*
@@ -124,7 +124,7 @@ public class Room {
 		System.out.println("Set group to 0 for user " + username);
 		sdao.closeConnection();
 		udao.closeConnection();
-		breakoutGroups.get(groupNum).removeUser(username);
+		//breakoutGroups.get(groupNum).removeUser(username);
 	}
 	
 	
@@ -148,9 +148,9 @@ public class Room {
 		return roomNum;
 	}
 	
-	public List<String> getGroupUsernames(int groupNum)
+	public List<String> getGroupMemberNames(int groupNum)
 	{
-		List<String> groupUsernames = breakoutGroups.get(groupNum-1).getGroupUsernames();
-		return groupUsernames;
+		List<String> groupMemberNames = breakoutGroups.get(groupNum-1).getMemberNames();
+		return groupMemberNames;
 	}
 }

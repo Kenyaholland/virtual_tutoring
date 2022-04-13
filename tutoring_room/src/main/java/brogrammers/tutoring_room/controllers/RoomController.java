@@ -33,8 +33,8 @@ public class RoomController {
 		int linePoint = 0;
 		String groupMembersStr = "";
 		
-		if (!room.getGroupUsernames(groupNum).isEmpty()) {
-			for (String username : room.getGroupUsernames(groupNum)) {
+		if (!room.getGroupMemberNames(groupNum).isEmpty()) {
+			for (String username : room.getGroupMemberNames(groupNum)) {
 				int usernameLen = username.length();
 				
 				if (groupMembersStr.isEmpty()) {
