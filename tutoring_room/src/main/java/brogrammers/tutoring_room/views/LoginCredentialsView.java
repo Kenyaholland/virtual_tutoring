@@ -56,8 +56,8 @@ public class LoginCredentialsView
     	title.setFont(Font.font("Verdana", FontWeight.BOLD, 32));
     	
     	Hyperlink forgot_password = new Hyperlink("Forgot Password");
-    	Hyperlink register = new Hyperlink("No Account? Click Here to Register");
-    	Hyperlink tutor_reg = new Hyperlink("I'm a tutor");
+    	Hyperlink register = new Hyperlink("No Account? Click Here to Register as a Student");
+    	Hyperlink tutor_reg = new Hyperlink("No Account? Click Here to Register as a Tutor");
     	
     	TextField username_field = new TextField("");
     	PasswordField password_field = new PasswordField();
