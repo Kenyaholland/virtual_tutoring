@@ -63,6 +63,23 @@ public class OAuthClient {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return response.body();
 	}
+	
+	@SuppressWarnings("exports")
+	public static String CreateMeeting(HttpClient client, String token) throws IOException, InterruptedException {
+		
+        String apiUrl = "https://api.zoom.us/v2/users/me/meetings";
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(apiUrl))
+                .setHeader("Authorization", "Bearer " + token)
+                .build();
+        
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(new JSONObject(response.body()).toString(4));
+        return response.body();
+        
+	}
+	
 	public static void main(String[] args) throws IOException, InterruptedException, URISyntaxException {	
 		
 		// this main function is for testing the HTTP functions

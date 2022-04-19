@@ -43,9 +43,9 @@ import java.util.Map;
 
 public class OAuthServer {
 	// these need to be placed in a .gitignore
-	static final String clientID = "";
-	static final String clientSecret = "";
-	static final String redirectURL = "";
+	static final String clientID = "A_e03NyRQc61lgH6jk4SPw";
+	static final String clientSecret = "xAHBVM7rhIE6Xb2Cd2rDqc8UnvYJ9NuB";
+	static final String redirectURL = "https://3d89-2600-8807-8201-7a00-f032-bbe5-51aa-6e78.ngrok.io";
 	
 	private ServerSocket serverSocket;
 	private Map<String, String> clientCodes;

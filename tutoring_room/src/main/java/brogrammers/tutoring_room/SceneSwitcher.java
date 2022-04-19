@@ -26,6 +26,7 @@ public class SceneSwitcher extends Pane{
 	private Stage stage;
 	private SessionController sessionCtrl;
 	private ClientController clientCtrl;
+	private OAuthClient authClient;
 	private ArrayList<RoomView> rooms;
 	
 	public static CoursesDAO course_dao = new CoursesDAO();
@@ -37,6 +38,7 @@ public class SceneSwitcher extends Pane{
 	{
 		this.stage = stage;
 		this.sessionCtrl = null;
+		authClient = new OAuthClient();
 		rooms = new ArrayList<RoomView>();
 		
 		for (int i = 0; i < 6; i++) {
@@ -170,5 +172,9 @@ public class SceneSwitcher extends Pane{
 		else {
 			return sessionCtrl.getActiveSession();
 		}
+	}
+	
+	public OAuthClient getAuthClient() {
+		return this.authClient;
 	}
 }
