@@ -168,7 +168,7 @@ public class SceneSwitcher extends Pane{
 			return false;
 		}
 		else {
-			return sessionCtrl.getActiveSession();
+			return sessionCtrl.isActiveSession();
 		}
 	}
 }

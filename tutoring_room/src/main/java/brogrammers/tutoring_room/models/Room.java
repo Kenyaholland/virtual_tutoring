@@ -127,7 +127,6 @@ public class Room {
 		breakoutGroups.get(groupNum).removeUser(username);
 	}
 	
-	
 	static int getActiveUserRoomNum(String _sessionId)
 	{
 		final SessionDAO _sdao = new SessionDAO();
@@ -153,4 +152,5 @@ public class Room {
 		List<String> groupUsernames = breakoutGroups.get(groupNum-1).getGroupUsernames();
 		return groupUsernames;
 	}
+
 }
