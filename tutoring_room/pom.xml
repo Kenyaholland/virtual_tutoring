@@ -78,3 +78,10 @@
         </plugins>
     </build>
 </project>
+
+surefire:
+<configuration>
+    <argLine>
+      --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
+    </argLine>
+  </configuration>
