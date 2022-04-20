@@ -64,6 +64,7 @@ public class LoginView extends Pane{
 		
 		// Buttons
 		signInButton = new Button("Sign in");
+		signInButton.setId("sign-in-button");
 		
 		// DropDown
 		schoolDropDown = new ComboBox<String>();

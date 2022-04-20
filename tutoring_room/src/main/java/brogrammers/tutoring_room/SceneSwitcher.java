@@ -22,7 +22,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class SceneSwitcher extends Pane{
+public class SceneSwitcher extends Pane {
 	private Stage stage;
 	private SessionController sessionCtrl;
 	private ClientController clientCtrl;
