@@ -5,10 +5,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -56,6 +59,7 @@ public class OAuthClient {
 	@SuppressWarnings("exports")
 	public static String RequestUserInformation(HttpClient client, String token) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
+        		.GET()
                 .uri(URI.create("https://api.zoom.us/v2/users/me"))
                 .setHeader("Authorization", "Bearer " + token)
                 .build();
@@ -64,20 +68,43 @@ public class OAuthClient {
         return response.body();
 	}
 	
+	private static HttpRequest.BodyPublisher buildFormDataFromMap(Map<Object, Object> data) {
+        var builder = new StringBuilder();
+        for (Map.Entry<Object, Object> entry : data.entrySet()) {
+            if (builder.length() > 0) {
+                builder.append("&");
+            }
+            builder.append(URLEncoder.encode(entry.getKey().toString(), StandardCharsets.UTF_8));
+            builder.append("=");
+            builder.append(URLEncoder.encode(entry.getValue().toString(), StandardCharsets.UTF_8));
+        }
+        System.out.println(builder.toString());
+        return HttpRequest.BodyPublishers.ofString(builder.toString());
+    }
+	
 	@SuppressWarnings("exports")
 	public static String CreateMeeting(HttpClient client, String token) throws IOException, InterruptedException {
+		
+		Map<Object, Object> data = new HashMap<>();
+		data.put("agenda", "TUTORING");
+        data.put("pre_schedule", "false");
+        data.put("type", "1");
 		
         String apiUrl = "https://api.zoom.us/v2/users/me/meetings";
 
         HttpRequest request = HttpRequest.newBuilder()
+        		.POST(buildFormDataFromMap(data))
                 .uri(URI.create(apiUrl))
                 .setHeader("Authorization", "Bearer " + token)
+                .header("Content-Type", "application/x-www-form-urlencoded")
                 .build();
         
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println(new JSONObject(response.body()).toString(4));
-        return response.body();
+        //userID: me, pre-schedule: false, type: 1,
         
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        //System.out.println(response.body());
+        //System.out.println(new JSONObject(response.body()).toString(4));
+        return response.body();
 	}
 	
 	public static void main(String[] args) throws IOException, InterruptedException, URISyntaxException {	
