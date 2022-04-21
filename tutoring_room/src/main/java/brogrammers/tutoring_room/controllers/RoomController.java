@@ -21,33 +21,27 @@ public class RoomController {
 		room.removeActiveUserFromGroup();
 	}
 	
-	public void removeFromRoom()
-	{
-		room.removeActiveUser();
-	}
-	
 	public String getGroupMembers(int groupNum)
 	{
 		final int MAX_CHAR = 50;
-		final int WRAP_POINT = 25;
+		final int WRAP_POINT = 30;
 		int linePoint = 0;
 		String groupMembersStr = "";
 		
-		if (!room.getGroupMemberNames(groupNum).isEmpty()) {
-			for (String username : room.getGroupMemberNames(groupNum)) {
-				int usernameLen = username.length();
-				
+		if (!room.getGroupNames(groupNum).isEmpty()) {
+			for (String name : room.getGroupNames(groupNum)) {
+				int nameLen = name.length();
 				if (groupMembersStr.isEmpty()) {
-					groupMembersStr += username;
+					groupMembersStr += name;
 				}
-				else if ((groupMembersStr.length() + usernameLen) <= MAX_CHAR) {
-					if ((linePoint + usernameLen) >= WRAP_POINT) {
-						groupMembersStr += ",\n" + username;
-						linePoint = usernameLen;
+				else if ((groupMembersStr.length() + nameLen) <= MAX_CHAR) {
+					if ((linePoint + nameLen) >= WRAP_POINT) {
+						groupMembersStr += ",\n" + name;
+						linePoint = nameLen;
 					}
 					else {
-						groupMembersStr += ", " + username;
-						linePoint += usernameLen + 2;
+						groupMembersStr += ", " + name;
+						linePoint += nameLen + 2;
 					}
 				}
 				else {

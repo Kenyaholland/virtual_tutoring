@@ -154,7 +154,7 @@ public class TutorRegView
     	alert.setTitle("Registration Alert");
     	alert.setHeaderText("Information about your registration attempt");
     	
-    	boolean check_email_validity = registration.isEmailValid(email);
+    	boolean check_email_validity = registration.isValidEmail(email);
     	
     	Thread thread = new Thread(new Runnable()
 		{
@@ -192,7 +192,7 @@ public class TutorRegView
     		alert.setContentText("The email address you have entered is either unavailable or is invalid. Make sure that you have entered a valid .edu email address to complete your registration.");
     		alert.showAndWait();
     	}
-    	else if(!(registration.validPassword(password)))
+    	else if(!(registration.isValidPassword(password)))
     	{
     		alert.setContentText("Invalid password. Passwords must be at-least 8 characters in length, "
     				+ "contain a mix of upper and lower case characters, at-least one digit (0-9), and at-least one of the following special characters !@#?]");

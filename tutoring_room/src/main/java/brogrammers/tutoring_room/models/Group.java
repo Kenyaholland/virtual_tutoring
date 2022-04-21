@@ -30,12 +30,21 @@ public class Group {
 		return this.roomNum;
 	}
 	
-	public List<String> getMemberNames()
+	public void addUser(String username) 
+	{
+		groupNames.add(username);
+	}
+	
+	public void removeUser(String username)
+	{
+		groupNames.remove(username);
+	}
+	
+	public List<String> getNames()
 	{
 		dao.connectToDatabase();
-		this.groupNames = dao.getGroupNames(roomNum, groupNum);		
+		this.groupNames = dao.getGroupNames(roomNum, groupNum);
 		dao.closeConnection();
-		
 		return this.groupNames;
 	}
 }
