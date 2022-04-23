@@ -72,7 +72,7 @@ public class OAuthClient {
         var builder = new StringBuilder();
         for (Map.Entry<Object, Object> entry : data.entrySet()) {
             if (builder.length() > 0) {
-                builder.append(";");
+                builder.append("&");
             }
             builder.append(URLEncoder.encode(entry.getKey().toString(), StandardCharsets.UTF_8));
             builder.append("=");
@@ -86,6 +86,7 @@ public class OAuthClient {
 	public static String CreateMeeting(HttpClient client, String token) throws IOException, InterruptedException {
 		
 		Map<Object, Object> data = new HashMap<>();
+		data.put("userId", "kenyamholland@gmail.com");
 		data.put("agenda", "TUTORING");
         data.put("pre_schedule", "false");
         data.put("type", "1");
