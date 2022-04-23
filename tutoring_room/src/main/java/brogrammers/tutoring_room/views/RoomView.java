@@ -1,5 +1,7 @@
 package brogrammers.tutoring_room.views;
 
+import java.awt.Desktop;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -211,26 +213,14 @@ public class RoomView extends Pane{
 				
 				// generate client identifier
 				HttpClient client = HttpClient.newHttpClient();
-				String state = Base64.getEncoder().encodeToString(("kmh99" + ":" + new Random().nextInt(999999)).getBytes());
 
 				try {
-					// send client to redirect URL
-					switcher.getAuthClient().GenerateCode(client, state);
 					
-					// this is for testing
-					// we can check if there is a generated code by calling RequestCode()
-			        TimeUnit.SECONDS.sleep(5);
-			        
-			        // request access code
-			        String code = switcher.getAuthClient().RequestCode(client, state);
-			        
-			        // get access token
-			        String token = switcher.getAuthClient().RequestToken(client, state, code);
-					
-					switcher.getAuthClient().CreateMeeting(client, new JSONObject(token).get("access_token").toString());
+					String result = switcher.getAuthClient().CreateMeeting(client, new JSONObject(switcher.getToken()).get("access_token").toString());
+					System.out.println(result);
 					
 					//get join_url and redirect user to website
-					
+					//Desktop.getDesktop().browse(new URL(url).toURI());
 					
 				} catch (Exception e1) {
 					e1.printStackTrace();

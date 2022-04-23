@@ -45,7 +45,7 @@ public class OAuthServer {
 	// these need to be placed in a .gitignore
 	static final String clientID = "A_e03NyRQc61lgH6jk4SPw";
 	static final String clientSecret = "xAHBVM7rhIE6Xb2Cd2rDqc8UnvYJ9NuB";
-	static final String redirectURL = "https://42d0-2600-8807-8201-7a00-698a-3b18-97c7-cfbe.ngrok.io";
+	static final String redirectURL = "https://1e05-2600-8807-8201-7a00-3cb6-1501-9d7-34ef.ngrok.io";
 	
 	private ServerSocket serverSocket;
 	private Map<String, String> clientCodes;
