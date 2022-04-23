@@ -84,25 +84,34 @@ public class OAuthClient {
 	
 	@SuppressWarnings("exports")
 	public static String CreateMeeting(HttpClient client, String token) throws IOException, InterruptedException {
-		
-		Map<Object, Object> data = new HashMap<>();
-		data.put("userId", "kenyamholland@gmail.com");
-		data.put("agenda", "TUTORING");
-        data.put("pre_schedule", "false");
-        data.put("type", "1");
-		
+        
+        String json = new StringBuilder()
+                .append("{")
+                .append("\"agenda\":\"TUTORING\",")
+                .append("\"pre_schedule\":false,")
+                .append("\"pre_schedule\":false,")
+                .append("\"type\":1,")
+                .append("\"settings\":{")
+                .append("\"meeting_authentication\":false")
+                .append("}")
+                .append("}").toString();
+        
         String apiUrl = "https://api.zoom.us/v2/users/me/meetings";
-
+        
         HttpRequest request = HttpRequest.newBuilder()
-        		.POST(buildFormDataFromMap(data))
+        		.POST(HttpRequest.BodyPublishers.ofString(json))
                 .uri(URI.create(apiUrl))
                 .setHeader("Authorization", "Bearer " + token)
-                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Content-Type", "application/json")
                 .build();
         
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        //System.out.println(new JSONObject(response.body()).toString(4));
-        return response.body();
+        
+        JSONObject obj = new JSONObject(response.body());
+        String join_url = obj.getString("join_url");
+        System.out.println(join_url);
+        
+        return join_url;
 	}
 	
 	public static void main(String[] args) throws IOException, InterruptedException, URISyntaxException {	

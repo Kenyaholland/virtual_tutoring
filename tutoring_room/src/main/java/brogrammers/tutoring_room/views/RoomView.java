@@ -216,11 +216,9 @@ public class RoomView extends Pane{
 
 				try {
 					
-					String result = switcher.getAuthClient().CreateMeeting(client, new JSONObject(switcher.getToken()).get("access_token").toString());
-					System.out.println(result);
+					String url = switcher.getAuthClient().CreateMeeting(client, new JSONObject(switcher.getToken()).get("access_token").toString());
 					
-					//get join_url and redirect user to website
-					//Desktop.getDesktop().browse(new URL(url).toURI());
+					Desktop.getDesktop().browse(new URL(url).toURI());
 					
 				} catch (Exception e1) {
 					e1.printStackTrace();
