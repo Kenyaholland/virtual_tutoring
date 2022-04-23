@@ -9,14 +9,14 @@ public class Group {
 
 	private int groupNum;
 	private int roomNum;
-	private List<String> groupUsernames;
+	private List<String> groupNames;
 	private UserDAO dao;
 	
 	public Group(int groupNum, int roomNum)
 	{
 		this.groupNum = groupNum;
 		this.roomNum = roomNum;
-		groupUsernames = new ArrayList<String>();
+		groupNames = new ArrayList<String>();
 		dao = new UserDAO();
 	}
 	
@@ -32,19 +32,19 @@ public class Group {
 	
 	public void addUser(String username) 
 	{
-		groupUsernames.add(username);
+		groupNames.add(username);
 	}
 	
 	public void removeUser(String username)
 	{
-		groupUsernames.remove(username);
+		groupNames.remove(username);
 	}
 	
-	public List<String> getGroupUsernames()
+	public List<String> getNames()
 	{
 		dao.connectToDatabase();
-		this.groupUsernames = dao.getGroupUsernames(roomNum, groupNum);
+		this.groupNames = dao.getGroupNames(roomNum, groupNum);
 		dao.closeConnection();
-		return this.groupUsernames;
+		return this.groupNames;
 	}
 }

@@ -504,7 +504,7 @@ public class UserDAO
 		return -1;
 	}
 	
-	public List<String> getGroupUsernames(int roomNum, int groupNum)
+	public List<String> getGroupNames(int roomNum, int groupNum)
 	{
 		try
 		{
@@ -518,14 +518,16 @@ public class UserDAO
 			
 			ResultSet rs = get.executeQuery();
 		
-			List<String> usernames = new ArrayList<String>();
+			List<String> names = new ArrayList<String>();
 			while (rs.next()) 
 			{ 
-				String username = rs.getString("username");
-				usernames.add(username);
+				String fname = rs.getString("fName");
+				String lname = rs.getString("lName");
+				String name = fname + " " + lname;
+				names.add(name);
 			}
 			
-			return usernames;
+			return names;
 		}
 		catch(Exception e)
 		{

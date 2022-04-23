@@ -147,10 +147,10 @@ public class Room {
 		return roomNum;
 	}
 	
-	public List<String> getGroupUsernames(int groupNum)
+	public List<String> getGroupNames(int groupNum)
 	{
-		List<String> groupUsernames = breakoutGroups.get(groupNum-1).getGroupUsernames();
-		return groupUsernames;
+		List<String> groupNames = breakoutGroups.get(groupNum-1).getNames();
+		return groupNames;
 	}
 
 }
