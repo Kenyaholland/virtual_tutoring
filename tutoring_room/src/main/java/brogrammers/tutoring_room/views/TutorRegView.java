@@ -15,12 +15,14 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.scene.control.Label;
+
 /**
  * The Brogrammers 
  * CIS4592 Capstone Project 
@@ -68,48 +70,63 @@ public class TutorRegView
     	root.setSpacing(16);
     	name.setSpacing(16);
     	
-    	Text title = new Text(".:Tutor Registration:.");
-    	title.setFont(Font.font("Verdana", FontWeight.BOLD, 32));
+    	Label title = new Label(".:Tutor Registration:.");
+    	title.setStyle("-fx-font-family: Helvetica; -fx-font-size: 28px; -fx-font-weight: BOLD; -fx-text-fill: #7cafc2;");
     	
     	Hyperlink login = new Hyperlink("Return to Login");
+    	login.setStyle("-fx-font-family: Helvetica");
     	
     	TextField firstName_field = new TextField("");
     	TextField lastName_field = new TextField("");
     	TextField username_field = new TextField("");
     	PasswordField password_field = new PasswordField();
     	TextField email_field = new TextField("");
+    	
     	firstName_field.setPromptText("First Name");
     	lastName_field.setPromptText("Last Name");
     	username_field.setPromptText("Username");
     	password_field.setPromptText("Password");
     	email_field.setPromptText("Email Address");
-    	courses.setTitle("Select Courses");
     	
     	firstName_field.setMaxWidth(256);
     	firstName_field.setMaxHeight(128);
+    	firstName_field.setStyle("-fx-background-radius: 4; -fx-background-color: #585858; -fx-font-family: Helvetica;"
+    			+ "-fx-prompt-text-fill: #888888; -fx-text-fill: #e8e8e8");
     	
     	lastName_field.setMaxWidth(256);
     	lastName_field.setMaxHeight(128);
+    	lastName_field.setStyle("-fx-background-radius: 4; -fx-background-color: #585858; -fx-font-family: Helvetica;"
+    			+ "-fx-prompt-text-fill: #888888; -fx-text-fill: #e8e8e8");
     	
     	username_field.setMaxWidth(256);
     	username_field.setMaxHeight(128);
+    	username_field.setStyle("-fx-background-radius: 4; -fx-background-color: #585858; -fx-font-family: Helvetica;"
+    			+ "-fx-prompt-text-fill: #888888; -fx-text-fill: #e8e8e8");
     	
     	password_field.setMaxWidth(256);
     	password_field.setMaxHeight(128);
+    	password_field.setStyle("-fx-background-radius: 4; -fx-background-color: #585858; -fx-prompt-text-fill: #888888; -fx-text-fill: #282828");
     	
     	email_field.setMaxWidth(256);
     	email_field.setMaxHeight(128);
+    	email_field.setStyle("-fx-background-radius: 4; -fx-background-color: #585858; -fx-font-family: Helvetica;"
+    			+ "-fx-prompt-text-fill: #888888; -fx-text-fill: #e8e8e8");
     	
+    	courses.setTitle("Select Courses");
+    	//courses.setBackground(new Background(new BackgroundFill(Color.web("b8b8b8"), null, null)));
     	courses.setMaxWidth(256);
     	courses.setMaxHeight(128);
     		
-    	Button register = new Button("Register");
+    	Button registerBtn = new Button("Register");
+    	registerBtn.setStyle("-fx-background-radius: 4; -fx-background-color: #e8e8e8; -fx-font-family: Helvetica;"
+				+ "-fx-font-size: 12px; -fx-text-fill: #181818;");
     	
-    	buttons.getChildren().add(register);
+    	buttons.getChildren().add(registerBtn);
     	
     	name.getChildren().add(firstName_field);
     	name.getChildren().add(lastName_field);
     	
+    	root.setBackground(new Background(new BackgroundFill(Color.web("181818"), null, null)));
     	root.getChildren().add(title);
     	root.getChildren().add(name);
     	root.getChildren().add(username_field);
@@ -119,10 +136,10 @@ public class TutorRegView
     	root.getChildren().add(buttons);
     	root.getChildren().add(login);
     	
-    	register.setOnAction(e -> getCredentials(courses, firstName_field, lastName_field, username_field, password_field, email_field));
+    	registerBtn.setOnAction(e -> getCredentials(courses, firstName_field, lastName_field, username_field, password_field, email_field));
     	login.setOnAction(e -> stage.setScene(switcher.LoginCredentialsScene(false)));
     	
-    	scene = new Scene(root, 1000, 500);
+    	scene = new Scene(root, 600, 500);
     }
     
     boolean check_username;
@@ -153,6 +170,9 @@ public class TutorRegView
     	Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle("Registration Alert");
     	alert.setHeaderText("Information about your registration attempt");
+    	alert.setX(250);
+    	alert.setY(200);
+    	alert.getDialogPane().setBackground(new Background(new BackgroundFill(Color.web("E8E8E8"), null, null)));
     	
     	boolean check_email_validity = registration.isValidEmail(email);
     	
@@ -238,6 +258,9 @@ public class TutorRegView
     	Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle("Registration Alert");
     	alert.setHeaderText("Information about your registration attempt");
+    	alert.setX(250);
+    	alert.setY(200);
+    	alert.getDialogPane().setBackground(new Background(new BackgroundFill(Color.web("E8E8E8"), null, null)));
     	
     	if(registration.registerTutor(tutoringCourses, firstName, lastName, username, password, email, code) != null)
     	{

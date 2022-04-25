@@ -1,6 +1,5 @@
 package brogrammers.tutoring_room.views;
 
-import brogrammers.tutoring_room.App;
 import brogrammers.tutoring_room.SceneSwitcher;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,10 +9,12 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class LoginView extends Pane{
@@ -59,11 +60,12 @@ public class LoginView extends Pane{
 	public void initializeVariables()
 	{	
 		// Labels
-		title = new Label("Virtual Tutoring Room");
+		title = new Label("Virtual Tutoring");
 		schoolSelection = new Label("Please select your school to sign in");
 		
 		// Buttons
 		signInButton = new Button("Sign in");
+		signInButton.setId("sign-in-button");
 		
 		// DropDown
 		schoolDropDown = new ComboBox<String>();
@@ -84,18 +86,24 @@ public class LoginView extends Pane{
 	public void stylizeElements()
 	{
 		// Labels
-		title.setAlignment(Pos.CENTER);
-		title.setFont(new Font("Arial", 16));
-		HBox.setMargin(title, new Insets(150, 0, 10, 0));
+		title.setStyle("-fx-text-fill: #7cafc2; -fx-font-family: Helvetica; -fx-font-size: 32px; -fx-font-weight: BOLD");
+		HBox.setMargin(title, new Insets(125, 0, 10, 0));
 		
 		schoolSelection.setAlignment(Pos.CENTER);
-		schoolSelection.setFont(new Font("Arial", 12));
+		schoolSelection.setStyle("-fx-text-fill: #E8E8E8; -fx-font-family: Helvetica; -fx-font-size: 12px");
 		HBox.setMargin(schoolSelection, new Insets(0, 0, 0, 50));
+		schoolSelection.setPadding(new Insets(0, 0, 5, 0));
+		
+		schoolDropDown.setStyle("-fx-background-radius: 4; -fx-background-color: #B8B8B8; -fx-font-family: Helvetica;"
+				+ "-fx-font-size: 12px;");
 		
 		// CheckBox
 		isTutor.setAlignment(Pos.CENTER);
-		isTutor.setFont(new Font("Arial", 12));
-		HBox.setMargin(isTutor, new Insets(0, 0, 0, 50));
+		isTutor.setStyle("-fx-text-fill: #E8E8E8; -fx-font-family: Helvetica; -fx-font-size: 12px");
+		HBox.setMargin(isTutor, new Insets(20, 0, 0, 150));
+		
+		signInButton.setStyle("-fx-background-radius: 4; -fx-background-color: #E8E8E8; -fx-text-fill: #181818;"
+				+ "-fx-font-family: Helvetica; -fx-font-size: 12px;");
 		
 		// HBoxes
 		signInButtonRow.setAlignment(Pos.CENTER);
@@ -122,6 +130,9 @@ public class LoginView extends Pane{
 		    	alert.setTitle("Login Alert");
 		    	alert.setHeaderText("Login Error");
 		    	alert.setContentText("Must select a University from the drop-down menu.");
+		    	alert.setX(250);
+		    	alert.setY(200);
+		    	alert.getDialogPane().setBackground(new Background(new BackgroundFill(Color.web("E8E8E8"), null, null)));
 		    	alert.showAndWait();
 			}
 			else 
@@ -151,7 +162,7 @@ public class LoginView extends Pane{
 		
 		selectionBox.getChildren().addAll(schoolSelection, schoolDropDown);
 		
-		loginBox.getChildren().addAll(titleBox, tutorBox, selectionBox, signInButtonRow);
+		loginBox.getChildren().addAll(titleBox, selectionBox, tutorBox, signInButtonRow);
 		
 		this.getChildren().addAll(loginBox);
 	}

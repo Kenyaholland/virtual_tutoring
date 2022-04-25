@@ -3,7 +3,6 @@ package brogrammers.tutoring_room;
 import brogrammers.tutoring_room.controllers.ClientController;
 import brogrammers.tutoring_room.controllers.SessionController;
 import brogrammers.tutoring_room.data_access.CoursesDAO;
-import brogrammers.tutoring_room.data_access.UserDAO;
 import brogrammers.tutoring_room.views.ChangePasswordView;
 import brogrammers.tutoring_room.views.DirectoryView;
 import brogrammers.tutoring_room.views.LoginCredentialsView;
@@ -17,9 +16,12 @@ import java.util.HashSet;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class SceneSwitcher extends Pane {
@@ -58,7 +60,8 @@ public class SceneSwitcher extends Pane {
     	
     	loginBox.setAlignment(Pos.CENTER);
     	loginBox.getChildren().add(loginView);
-        Scene loginScene = new Scene(loginBox, 1000, 500);
+    	loginBox.setBackground(new Background(new BackgroundFill(Color.web("181818"), null, null)));
+        Scene loginScene = new Scene(loginBox, 500, 500);
         
       //loginScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
         if (onLogout) {
@@ -122,7 +125,8 @@ public class SceneSwitcher extends Pane {
 
 		directoryVBox.setAlignment(Pos.TOP_LEFT);
 		directoryVBox.getChildren().add(directoryView);
-        Scene directoryScene = new Scene(directoryVBox, 1000, 600);
+		directoryVBox.setBackground(new Background(new BackgroundFill(Color.web("181818"), null, null)));
+        Scene directoryScene = new Scene(directoryVBox, 900, 575);
         stage.setTitle("Virtual Tutoring");
         
         //directoryViewScene.getStylesheets().addAll(this.getClass().getResource("styling.css").toExternalForm());
@@ -138,6 +142,7 @@ public class SceneSwitcher extends Pane {
 
 		roomVBox.setAlignment(Pos.TOP_LEFT);
 		roomVBox.getChildren().add(rooms.get(roomNum - 1));
+		roomVBox.setBackground(new Background(new BackgroundFill(Color.web("181818"), null, null)));
         Scene roomScene = new Scene(roomVBox, 1000, 600);
         stage.setTitle("Virtual Tutoring");
         
