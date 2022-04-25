@@ -11,8 +11,14 @@ import brogrammers.tutoring_room.views.RegistrationView;
 import brogrammers.tutoring_room.views.RoomView;
 import brogrammers.tutoring_room.views.TutorRegView;
 
+import java.net.http.HttpClient;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashSet;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.json.JSONObject;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -28,6 +34,8 @@ public class SceneSwitcher extends Pane {
 	private Stage stage;
 	private SessionController sessionCtrl;
 	private ClientController clientCtrl;
+	private OAuthClient authClient;
+	private String token;
 	private ArrayList<RoomView> rooms;
 	
 	public static CoursesDAO course_dao = new CoursesDAO();
@@ -39,11 +47,14 @@ public class SceneSwitcher extends Pane {
 	{
 		this.stage = stage;
 		this.sessionCtrl = null;
+		authClient = new OAuthClient();
 		rooms = new ArrayList<RoomView>();
 		
 		for (int i = 0; i < 6; i++) {
 			rooms.add(null);
 		}
+		
+		token = generateAuthToken();
 	}
 	
 	public void makeRoom(int roomNum, String sessionId) 
@@ -175,5 +186,39 @@ public class SceneSwitcher extends Pane {
 		else {
 			return sessionCtrl.isActiveSession();
 		}
+	}
+	
+	public OAuthClient getAuthClient() {
+		return this.authClient;
+	}
+	
+	public String getToken() {
+		return this.token;
+	}
+	
+	private String generateAuthToken() {
+		// generate client identifier
+		HttpClient client = HttpClient.newHttpClient();
+		String state = Base64.getEncoder().encodeToString(("kmh99" + ":" + new Random().nextInt(999999)).getBytes());
+		String token = "";
+		
+		try {
+			// send client to redirect URL
+			getAuthClient().GenerateCode(client, state);
+			
+			// this is for testing
+			// we can check if there is a generated code by calling RequestCode()
+	        TimeUnit.SECONDS.sleep(5);
+	        
+	        // request access code
+	        String code = getAuthClient().RequestCode(client, state);
+	        
+	        // get access token
+	        token = getAuthClient().RequestToken(client, state, code);
+			
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return token;	
 	}
 }

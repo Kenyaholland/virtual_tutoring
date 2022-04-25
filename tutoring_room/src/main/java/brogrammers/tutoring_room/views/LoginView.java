@@ -33,9 +33,6 @@ public class LoginView extends Pane{
 	// DropDown
 	private ComboBox<String> schoolDropDown;
 	
-	// Checkbox
-	private CheckBox isTutor;
-	
 	// HBoxes
 	private HBox signInButtonRow;
 	private HBox titleBox;
@@ -69,9 +66,6 @@ public class LoginView extends Pane{
 		
 		// DropDown
 		schoolDropDown = new ComboBox<String>();
-		
-		// CheckBox
-		isTutor = new CheckBox("I am a tutor");
 		
 		// HBox
 		signInButtonRow = new HBox();
@@ -157,8 +151,6 @@ public class LoginView extends Pane{
 		
 		
 		titleBox.getChildren().add(title);
-		
-		tutorBox.getChildren().add(isTutor);
 		
 		selectionBox.getChildren().addAll(schoolSelection, schoolDropDown);
 		

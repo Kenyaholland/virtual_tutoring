@@ -58,11 +58,12 @@ public class LoginCredentialsView
     	title.setStyle("-fx-font-family: Helvetica; -fx-font-size: 28px; -fx-font-weight: BOLD; -fx-text-fill: #7cafc2");
     	
     	Hyperlink forgot_password = new Hyperlink("Forgot Password");
+    	Hyperlink register = new Hyperlink("No Account? Click Here to Register as a Student");
+    	Hyperlink tutor_reg = new Hyperlink("No Account? Click Here to Register as a Tutor");
+
     	forgot_password.setStyle("-fx-font-family: Helvetica");
-    	Hyperlink register = new Hyperlink("No Account? Click Here to Register");
-    	forgot_password.setStyle("-fx-font-family: Helvetica");
-    	Hyperlink tutor_reg = new Hyperlink("I'm a tutor");
-    	forgot_password.setStyle("-fx-font-family: Helvetica");
+    	register.setStyle("-fx-font-family: Helvetica");
+    	tutor_reg.setStyle("-fx-font-family: Helvetica");
     	
     	TextField username_field = new TextField("");
     	username_field.setPromptText("Username");

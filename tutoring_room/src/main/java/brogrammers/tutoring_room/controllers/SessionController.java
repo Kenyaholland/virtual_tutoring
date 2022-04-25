@@ -34,7 +34,7 @@ public class SessionController {
 		mySession = null;
 	}
 	
-	public boolean getActiveSession() 
+	public boolean isActiveSession() 
 	{
 		if (mySession == null) {
 			return false;
