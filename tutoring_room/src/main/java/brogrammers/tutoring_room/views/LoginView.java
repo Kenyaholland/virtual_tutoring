@@ -32,9 +32,6 @@ public class LoginView extends Pane{
 	// DropDown
 	private ComboBox<String> schoolDropDown;
 	
-	// Checkbox
-	private CheckBox isTutor;
-	
 	// HBoxes
 	private HBox signInButtonRow;
 	private HBox titleBox;
@@ -68,9 +65,6 @@ public class LoginView extends Pane{
 		// DropDown
 		schoolDropDown = new ComboBox<String>();
 		
-		// CheckBox
-		isTutor = new CheckBox("I am a tutor");
-		
 		// HBox
 		signInButtonRow = new HBox();
 		titleBox = new HBox();
@@ -91,11 +85,6 @@ public class LoginView extends Pane{
 		schoolSelection.setAlignment(Pos.CENTER);
 		schoolSelection.setFont(new Font("Arial", 12));
 		HBox.setMargin(schoolSelection, new Insets(0, 0, 0, 50));
-		
-		// CheckBox
-		isTutor.setAlignment(Pos.CENTER);
-		isTutor.setFont(new Font("Arial", 12));
-		HBox.setMargin(isTutor, new Insets(0, 0, 0, 50));
 		
 		// HBoxes
 		signInButtonRow.setAlignment(Pos.CENTER);
@@ -146,8 +135,6 @@ public class LoginView extends Pane{
 		
 		
 		titleBox.getChildren().add(title);
-		
-		tutorBox.getChildren().add(isTutor);
 		
 		selectionBox.getChildren().addAll(schoolSelection, schoolDropDown);
 		

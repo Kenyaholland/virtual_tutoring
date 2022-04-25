@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public class Client {
+public class ChatClient {
 	
 	private Socket socket;
 	private BufferedReader bufferedReader;
 	private BufferedWriter bufferedWriter;
 	
-	public Client(String address, int port) {
+	public ChatClient(String address, int port) {
 		try {
 			socket = new Socket(address, port);
 			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -50,7 +50,7 @@ public class Client {
 		System.out.print("Username: ");
 		String username = scanner.nextLine();
 		
-		Client client = new Client("localhost", 55555);
+		ChatClient client = new ChatClient("localhost", 55555);
 		
 		new Thread(new Runnable() {
 			@Override

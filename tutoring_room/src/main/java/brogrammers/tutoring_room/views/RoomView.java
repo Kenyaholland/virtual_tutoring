@@ -1,7 +1,15 @@
 package brogrammers.tutoring_room.views;
 
+import java.awt.Desktop;
+import java.net.URL;
+import java.net.http.HttpClient;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.json.JSONObject;
 
 import brogrammers.tutoring_room.SceneSwitcher;
 import brogrammers.tutoring_room.controllers.ClientController;
@@ -202,6 +210,20 @@ public class RoomView extends Pane{
 			final int groupNum = i;
 			joinGroupButtons.get(i-1).setOnAction(e -> {
 				//produce zoom link
+				
+				// generate client identifier
+				HttpClient client = HttpClient.newHttpClient();
+
+				try {
+					
+					String url = switcher.getAuthClient().CreateMeeting(client, new JSONObject(switcher.getToken()).get("access_token").toString());
+					
+					Desktop.getDesktop().browse(new URL(url).toURI());
+					
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				
 				roomCtrl.joinBreakoutGroup(groupNum);
 			});
 		}
@@ -362,6 +384,7 @@ public class RoomView extends Pane{
 		joinGroupButton.setFont(new Font("Arial", 12));
 		joinGroupButton.setTranslateX(35);
 		joinGroupButtons.add(joinGroupButton);
+		
 		
 		String groupMemberList = "Students:\n";
 		groupMemberList += roomCtrl.getGroupMembers(groupNum);
