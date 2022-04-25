@@ -27,4 +27,9 @@ public class DirectoryController {
 	{
 		directory.removeActiveUserFromRoom();
 	}
+	
+//	public String getTutorNameForRoom(int roomNum)
+//	{
+//		return directory.getTutorNameForRoom(roomNum);
+//	}
 }

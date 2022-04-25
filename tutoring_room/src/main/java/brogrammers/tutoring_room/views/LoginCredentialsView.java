@@ -10,12 +10,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.scene.control.Label;
+
 /**
  * The Brogrammers 
  * CIS4592 Capstone Project 
@@ -52,28 +54,38 @@ public class LoginCredentialsView
     	
     	root.setSpacing(16);
     	
-    	Text title = new Text(".:Login:.");
-    	title.setFont(Font.font("Verdana", FontWeight.BOLD, 32));
+    	Label title = new Label(".:Login:.");
+    	title.setStyle("-fx-font-family: Helvetica; -fx-font-size: 28px; -fx-font-weight: BOLD; -fx-text-fill: #7cafc2");
     	
     	Hyperlink forgot_password = new Hyperlink("Forgot Password");
     	Hyperlink register = new Hyperlink("No Account? Click Here to Register as a Student");
     	Hyperlink tutor_reg = new Hyperlink("No Account? Click Here to Register as a Tutor");
+
+    	forgot_password.setStyle("-fx-font-family: Helvetica");
+    	register.setStyle("-fx-font-family: Helvetica");
+    	tutor_reg.setStyle("-fx-font-family: Helvetica");
     	
     	TextField username_field = new TextField("");
-    	PasswordField password_field = new PasswordField();
     	username_field.setPromptText("Username");
-    	password_field.setPromptText("Password");
-    	
+    	username_field.setStyle("-fx-background-radius: 4; -fx-background-color: #585858; -fx-font-family: Helvetica;"
+    			+ "-fx-prompt-text-fill: #888888; -fx-text-fill: #e8e8e8");
     	username_field.setMaxWidth(256);
     	username_field.setMaxHeight(128);
     	
+    	PasswordField password_field = new PasswordField();
+    	password_field.setPromptText("Password");
+    	password_field.setStyle("-fx-background-radius: 4; -fx-background-color: #585858; -fx-prompt-text-fill: #888888;"
+    			+ "-fx-text-fill: #282828");
     	password_field.setMaxWidth(256);
     	password_field.setMaxHeight(128);
     	
-    	Button login = new Button("Login");
+    	Button loginBtn = new Button("Login");
+		loginBtn.setStyle("-fx-background-radius: 4; -fx-background-color: #e8e8e8; -fx-font-family: Helvetica;"
+				+ "-fx-font-size: 12px; -fx-text-fill: #181818;");
     	
-    	buttons.getChildren().add(login);
+    	buttons.getChildren().add(loginBtn);
     	
+    	root.setBackground(new Background(new BackgroundFill(Color.web("181818"), null, null)));
     	root.getChildren().add(title);
     	root.getChildren().add(username_field);
     	root.getChildren().add(password_field);
@@ -82,14 +94,14 @@ public class LoginCredentialsView
     	root.getChildren().add(register);
     	root.getChildren().add(tutor_reg);
     	
-    	login.setOnAction(e -> getCredentials(username_field, password_field));
+    	loginBtn.setOnAction(e -> getCredentials(username_field, password_field));
     	
     	forgot_password.setOnAction(e -> stage.setScene(switcher.ChangePasswordScene()));
     	
     	register.setOnAction(e -> stage.setScene(switcher.RegistrationScene()));
     	tutor_reg.setOnAction(e -> stage.setScene(switcher.TutorRegistrationScene()));
     	
-    	scene = new Scene(root, 1000, 500);
+    	scene = new Scene(root, 600, 500);
     }
     
     public void getCredentials(TextField username_field, TextField password_field)
@@ -125,6 +137,9 @@ public class LoginCredentialsView
 		Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle("Login Alert");
     	alert.setHeaderText("Information about your login attempt");
+    	alert.setX(250);
+    	alert.setY(200);
+    	alert.getDialogPane().setBackground(new Background(new BackgroundFill(Color.web("E8E8E8"), null, null)));
     	
     	if(checklogin)
     	{

@@ -11,12 +11,13 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.scene.control.Label;
 
 public class ChangePasswordView 
 {
@@ -49,16 +50,19 @@ public class ChangePasswordView
     	
     	root.setSpacing(16);
     	
-    	Text title = new Text(".:Change Password:.");
-    	title.setFont(Font.font("Verdana", FontWeight.BOLD, 32));
+    	Label title = new Label(".:Change Password:.");
+    	title.setStyle("-fx-font-family: Helvetica; -fx-font-size: 28px; -fx-font-weight: BOLD; -fx-text-fill: #7cafc2;");
     	
     	Hyperlink login = new Hyperlink("Have an Account? Click Here to Login");
+    	login.setStyle("-fx-font-family: Helvetica");
     	Hyperlink register = new Hyperlink("No Account? Click Here to Register");
+    	register.setStyle("-fx-font-family: Helvetica");
     	
     	TextField username_field = new TextField("");
     	TextField email_field = new TextField("");
     	PasswordField newPassword_field = new PasswordField();
     	PasswordField confirmNewPassword_field = new PasswordField();
+    	
     	username_field.setPromptText("Username");
     	email_field.setPromptText("Email Address");
     	newPassword_field.setPromptText("New Password");
@@ -66,20 +70,29 @@ public class ChangePasswordView
     	
     	username_field.setMaxWidth(256);
     	username_field.setMaxHeight(128);
+    	username_field.setStyle("-fx-background-radius: 4; -fx-background-color: #585858; -fx-font-family: Helvetica;"
+    			+ "-fx-prompt-text-fill: #888888; -fx-text-fill: #e8e8e8");
     	
     	email_field.setMaxWidth(256);
     	email_field.setMaxHeight(128);
+    	email_field.setStyle("-fx-background-radius: 4; -fx-background-color: #585858; -fx-font-family: Helvetica;"
+    			+ "-fx-prompt-text-fill: #888888; -fx-text-fill: #e8e8e8");
     	
     	newPassword_field.setMaxWidth(256);
     	newPassword_field.setMaxHeight(128);
+    	newPassword_field.setStyle("-fx-background-radius: 4; -fx-background-color: #585858; -fx-prompt-text-fill: #888888; -fx-text-fill: #282828");
     	
     	confirmNewPassword_field.setMaxWidth(256);
     	confirmNewPassword_field.setMaxHeight(128);
+    	confirmNewPassword_field.setStyle("-fx-background-radius: 4; -fx-background-color: #585858; -fx-prompt-text-fill: #888888; -fx-text-fill: #282828");
     	
-    	Button request = new Button("Request Password Change");
+    	Button requestBtn = new Button("Request Password Change");
+    	requestBtn.setStyle("-fx-background-radius: 4; -fx-background-color: #e8e8e8; -fx-font-family: Helvetica;"
+				+ "-fx-font-size: 12px; -fx-text-fill: #181818;");
     	
-    	buttons.getChildren().add(request);
+    	buttons.getChildren().add(requestBtn);
     	
+    	root.setBackground(new Background(new BackgroundFill(Color.web("181818"), null, null)));
     	root.getChildren().add(title);
     	root.getChildren().add(username_field);
     	root.getChildren().add(email_field);
@@ -89,12 +102,12 @@ public class ChangePasswordView
     	root.getChildren().add(login);
     	root.getChildren().add(register);
     	
-    	request.setOnAction(e -> getCredentials(username_field, email_field, newPassword_field, confirmNewPassword_field));
+    	requestBtn.setOnAction(e -> getCredentials(username_field, email_field, newPassword_field, confirmNewPassword_field));
     	
     	login.setOnAction(e -> stage.setScene(switcher.LoginCredentialsScene(false)));
     	register.setOnAction(e -> stage.setScene(switcher.RegistrationScene()));
     	
-    	scene = new Scene(root, 1000, 500);
+    	scene = new Scene(root, 600, 500);
     }
     
     private boolean checkExistence = false;

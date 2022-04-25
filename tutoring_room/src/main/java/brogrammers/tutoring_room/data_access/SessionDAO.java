@@ -77,14 +77,64 @@ public class SessionDAO {
 	public void removeSession(String sessionId)
 	{
 		try
-		{
-			String query = "DELETE FROM active_sessions WHERE id=?";
-			
+		{			
 			PreparedStatement get;
-			get = connection.prepareStatement(query);
 			
+			String query = "SELECT username FROM active_sessions WHERE id=?";
+			get = connection.prepareStatement(query);
+			get.setString(1, sessionId);
+			
+			ResultSet rs = get.executeQuery();
+			
+			String username = "";
+			if(rs.next()) 
+			{ 
+				username = rs.getString("username");
+			}
+			
+			query = "DELETE FROM active_sessions WHERE id=?";
+			get = connection.prepareStatement(query);
 			get.setString(1, sessionId);
 			get.execute();
+			
+			query = "SELECT roomNum FROM users WHERE username=?";
+			get = connection.prepareStatement(query);
+			get.setString(1, username);
+			rs = get.executeQuery();
+			
+			int roomNum = 0;
+			if(rs.next()) 
+			{ 
+				roomNum = rs.getInt("roomNum");
+			}
+			
+			if (roomNum != 0) {
+				query = "UPDATE users SET roomNum=?, groupNum=? WHERE username=?";
+				get = connection.prepareStatement(query);
+				get.setInt(1, 0);
+				get.setInt(2, 0);
+				get.setString(3, username);
+				get.execute();
+				System.out.println("Set room and group number to 0 on user exit");
+				
+				query = "SELECT numStudents FROM room_directory WHERE id=?";
+				get = connection.prepareStatement(query);
+				get.setInt(1, roomNum);
+				rs = get.executeQuery();
+				
+				int numStudents = 0;
+				if (rs.next()) {
+					numStudents = rs.getInt("numStudents");
+				}
+				
+				query = "UPDATE room_directory SET numStudents=? WHERE id=?";
+				get = connection.prepareStatement(query);
+				numStudents--;
+				get.setInt(1, numStudents);
+				get.setInt(2, roomNum);
+				get.execute();
+				System.out.println("Decremented room count for room " + roomNum);
+			}
 		}
 		catch(Exception e)
 		{

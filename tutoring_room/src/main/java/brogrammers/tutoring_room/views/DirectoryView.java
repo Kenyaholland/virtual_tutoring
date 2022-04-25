@@ -64,7 +64,7 @@ public class DirectoryView extends Pane{
 	public void initializeVariables()
 	{
 		// Labels
-		titleLabel = new Label("Virtual Tutoring Directory");
+		titleLabel = new Label("Room Directory");
 		
 		// Buttons
 		refreshButton = new Button("Refresh");
@@ -138,15 +138,14 @@ public class DirectoryView extends Pane{
 	private void stylizeHeaderBox()
 	{
 		// Style title
-		titleLabel.setFont(new Font("Arial", 14));
 		titleLabel.setTranslateX(10);
+		titleLabel.setStyle("-fx-font-family: Helvetica; -fx-text-fill: #7cafc2; -fx-font-size: 20px; -fx-font-weight: BOLD;");
 				
 		// Style buttons
-		refreshButton.setPrefSize(80, 10);
-		refreshButton.setFont(new Font("Arial", 10));
-		
-		logoutButton.setPrefSize(80, 10);
-		logoutButton.setFont(new Font("Arial", 10));
+		refreshButton.setStyle("-fx-background-radius: 4; -fx-background-color: #E8E8E8; -fx-text-fill: #181818;"
+				+ "-fx-font-family: Helvetica; -fx-font-size: 12px;");
+		logoutButton.setStyle("-fx-background-radius: 4; -fx-background-color: #E8E8E8; -fx-text-fill: #181818;"
+				+ "-fx-font-family: Helvetica; -fx-font-size: 12px;");
 				
 		// Style header boxes
 		titleBox.setPrefWidth(200);
@@ -154,30 +153,41 @@ public class DirectoryView extends Pane{
 		titleBox.setTranslateX(10);
 				
 		headerButtonBox.setAlignment(Pos.CENTER_RIGHT);
-		headerButtonBox.setSpacing(10);
-		headerButtonBox.setTranslateX(600);
+		headerButtonBox.setSpacing(15);
+		headerButtonBox.setTranslateX(550);
 				
 		// Style header
-		headerRow.setPrefSize(1000, 30);
+		headerRow.setPrefSize(900, 50);
 		headerRow.setAlignment(Pos.CENTER_LEFT);
 		headerRow.setSpacing(10);
+		headerRow.setStyle("-fx-background-color: #383838;");
 	}
 	
 	private void stylizeRoomGrid()
 	{
-		roomsGrid.setPrefSize(1000, 570);
+		roomsGrid.setTranslateX(20);
+		roomsGrid.setHgap(15);
+		roomsGrid.setVgap(15);
+		roomsGrid.setPrefSize(900, 570);
 	}
 	
 	private void buildRoom(int roomNum) {
 		VBox roomBox = new VBox();
+		roomBox.setPrefSize(275, 225);
+		roomBox.setSpacing(10);
+		roomBox.setStyle("-fx-background-color: #484848; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #a1b56c; -fx-border-width: 5;");
 		
 		// Make room title and join button
-		Label roomLabel = new Label("Room " + roomNum);
-		roomLabel.setFont(new Font("Arial", 16));
-		HBox.setMargin(roomLabel, new Insets(10, 150, 10, 20));
+		Label roomLabel = new Label("Room #" + roomNum);
+		roomLabel.setStyle("-fx-font-family: Helvetica; -fx-text-fill: #a1b56c; -fx-font-size: 16px; -fx-font-weight: BOLD;"
+				+ "text-decoration: underline; text-decoration-color: #a1b56c;");
+		HBox.setMargin(roomLabel, new Insets(10, 120, 10, 20));
 		
 		Button roomButton = new Button("Join");
+		roomButton.setStyle("-fx-background-radius: 4; -fx-background-color: #c8c8c8; -fx-font-family: Helvetica;"
+				+ "-fx-font-size: 12px; -fx-text-fill: #181818;");
 		HBox.setMargin(roomButton, new Insets(10, 10, 10, 0));
+		
 		// TO-DO: Switch to unique room scenes
 		roomButton.setOnAction(e -> {
 			dirCtrl.addUserToRoom(roomNum);
@@ -185,72 +195,71 @@ public class DirectoryView extends Pane{
 		});
 		
 		HBox roomHeaderBox = new HBox();
-		roomHeaderBox.setPrefSize(333.3, 20);
+		roomHeaderBox.setPrefSize(275, 20);
 		roomHeaderBox.getChildren().addAll(roomLabel, roomButton);
 		
+		//String tutorName = dirCtrl.getTutorNameForRoom(roomNum);
+		
 		// Make status row
-		Label statusLabel = new Label("Status:");
-		statusLabel.setFont(new Font("Arial", 12));
+		Label statusLabel = new Label("Status: ");
+		statusLabel.setStyle("-fx-font-family: Helvetica; -fx-font-size: 12px; -fx-font-weight: BOLD; -fx-text-fill: #e8e8e8;");
 		HBox.setMargin(statusLabel, new Insets(0, 10, 0, 20));
 		
 		Label status = new Label("Closed");
 		//When directory loads, do label.setText("In-Progress") in setOnAction for login if a tutor is present
-		status.setFont(new Font("Arial", 12));
+		status.setStyle("-fx-font-family: Helvetica; -fx-font-size: 12px; -fx-text-fill: #e8e8e8;");
 		
 		HBox statusRow = new HBox();
-		statusRow.setPrefSize(333.3, 20);
+		statusRow.setPrefSize(275, 20);
 		statusRow.getChildren().addAll(statusLabel, status);
 		
 		// Make Tutor row
-		Label tutorLabel = new Label("Tutor:");
-		tutorLabel.setFont(new Font("Arial", 12));
+		Label tutorLabel = new Label("Tutor: ");
+		tutorLabel.setStyle("-fx-font-family: Helvetica; -fx-font-size: 12px; -fx-font-weight: BOLD; -fx-text-fill: #e8e8e8;");
 		HBox.setMargin(tutorLabel, new Insets(0, 10, 0, 20));
 		
 		Label tutorName = new Label("None");
-		tutorName.setFont(new Font("Arial", 12));
+		tutorName.setStyle("-fx-font-family: Helvetica; -fx-font-size: 12px; -fx-text-fill: #e8e8e8;");
 		
 		HBox tutorRow = new HBox();
-		tutorRow.setPrefSize(333.3, 20);
+		tutorRow.setPrefSize(275, 20);
 		tutorRow.getChildren().addAll(tutorLabel, tutorName);
 		
 		// Make Courses row
-		Label courseLabel = new Label("Courses:");
-		courseLabel.setFont(new Font("Arial", 12));
+		Label courseLabel = new Label("Courses: ");
+		courseLabel.setStyle("-fx-font-family: Helvetica; -fx-font-size: 12px; -fx-font-weight: BOLD; -fx-text-fill: #e8e8e8;");
 		HBox.setMargin(courseLabel, new Insets(0, 10, 0, 20));
 		
 		Label courses = new Label("None");
-		courses.setFont(new Font("Arial", 12));
+		courses.setStyle("-fx-font-family: Helvetica; -fx-font-size: 12px; -fx-text-fill: #e8e8e8;");
 		
 		HBox coursesRow = new HBox();
-		coursesRow.setPrefSize(333.3, 20);
+		coursesRow.setPrefSize(275, 40);
 		coursesRow.getChildren().addAll(courseLabel, courses);
 		
 		// Make Students Row
-		Label studentsLabel = new Label("Students");
-		studentsLabel.setFont(new Font("Arial", 12));
+		Label studentsLabel = new Label("Number of students: ");
+		studentsLabel.setStyle("-fx-font-family: Helvetica; -fx-font-size: 12px; -fx-font-weight: BOLD; -fx-text-fill: #e8e8e8;");
 		HBox.setMargin(studentsLabel, new Insets(0, 10, 0, 20));
 		
 		int numStudents = dirCtrl.getNumStudentsInRoom(roomNum);
 		String _numStudents;
 		
 		if (numStudents == 0) {
-			_numStudents = "-- currently empty --";
+			_numStudents = "0";
 		}
 		else {
 			_numStudents = String.valueOf(numStudents);
 		}
 		
 		Label numOfStudents = new Label(_numStudents);
-		numOfStudents.setFont(new Font("Arial", 12));
+		numOfStudents.setStyle("-fx-font-family: Helvetica; -fx-font-size: 12px; -fx-text-fill: #e8e8e8;");
 		
 		HBox studentsRow = new HBox();
-		studentsRow.setPrefSize(333.3, 20);
+		studentsRow.setPrefSize(275, 20);
 		studentsRow.getChildren().addAll(studentsLabel, numOfStudents);
 		
-		roomBox.setPrefSize(333.3, 250);
-		roomBox.setSpacing(10);
-		
-		roomBox.getChildren().addAll(roomHeaderBox, statusRow, tutorRow, coursesRow, studentsRow);
+		roomBox.getChildren().addAll(roomHeaderBox, statusRow, studentsRow, tutorRow, coursesRow);
 		
 		roomVBoxes.add(roomBox);
 	}
