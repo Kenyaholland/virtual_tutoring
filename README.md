@@ -7,13 +7,17 @@
 3. Select "Import Projects" in the package explorer.
 4. In the window that opens, select "General" drop down arrow, and click "Existing Projects into Workspace."
 5. Click "Browse" and select the "virtual_tutoring" Folder. Then click Finish.
+** Note: If Eclipse recognizes two options for how to open the project (virtual_tutoring and virtual_tutoring/tutoring_room), select virtual_tutoring/tutoring_room
 
 ## **Things to do before running the app**
 
 (Finish these in detail)
 1. Ngrok
-2. Database
-3. Zoom App marketplace
+2. Database Setup
+    - For the program to be able to connect to the database, you must access the Amazon Web Services EC2 Management Console and add your IP to the inbound rules.
+    
+      ** Note: Dr. OK, please refer to an email from tyh2 with the subject "Brogrammers Database Connectivity Instructions (Capstone)" for instructions on how to do this. I have sent this via email to avoid any security problems with my AWS account.
+4. Zoom App marketplace
 
 
 ## **Run the app**
