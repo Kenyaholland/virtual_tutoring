@@ -26,7 +26,6 @@
 
 ## **Things to do before running the app**
 
-(Finish these in detail)
 1. Ngrok
 - Install Ngrok and setup as required. Doesn't matter where you store it. https://ngrok.com/download
 - Open command prompt, navigate to where you stored Ngrok, and run Ngrok on port 55556 (command: ngrok http 55556)
@@ -37,7 +36,7 @@
 - After you sign in, go to https://marketplace.zoom.us/develop/create and create a new OAuth application. 
 - Name it whatever you want, Account level application, and uncheck your intention to publish to Zoom marketplace. 
 - Copy app's client ID and secret to the matching variables in OAuthServer.java on lines 46 and 47.
-- Paste the same redirect url you have in the application into the redirect url for your Zoom application, as well as the OAuth allow list jsut below on the same page.
+- Paste the same redirect url you have in the application into the redirect url for your Zoom application, as well as the OAuth allow list just below on the same page.
 
 3. Database connection setup: For the program to be able to connect to the database, you must access the Amazon Web Services EC2 Management Console and add your IP to the inbound rules.
     
