@@ -51,4 +51,15 @@ Now you are ready to start the application.
 2. Run ChatServer.java
 3. Run App.java
 
+## **How to Use the Application**
+- Select a school from the dropdown (There is only one).
+- Create an account, either as a student or as a tutor. Our Tutor functions have not been fully developed (Meaning when you join a room, you won't be listed as a tutor along with your classes). But you can use everything as a regular user. 
+- You must create an account with your UWF email.
+- Paste the security code from your UWF email into the application where it prompts you to.
+- Go back to sign in page and sign in.
+- Now you should be in the directory. Choose a room to join.
+- When you are in the room, choose a group to join (Ie a Zoom meeting to join).
+- You will need to click the refresh button to see your name in the group section that you joined. 
+- If you want to test out the chat, run another App in Eclipse and login with a different account. You can use one of our logins if you would like. (U: kmh99 P: Macaroni1!) (U: tyh2 P: Password0!).
+
 Enjoy!
