@@ -37,7 +37,7 @@
 - Name it whatever you want, Select user-managed application, and uncheck your intention to publish to Zoom marketplace. 
 - Copy app's client ID and secret to the matching variables in OAuthServer.java on lines 46 and 47.
 - Paste the same redirect url you have in the application into the redirect url for your Zoom application, as well as the OAuth allow list just below on the same page.
-- You will need to fulfill all of these requirements for the Zoom app to work, aside from the redirect url, they don't really matter.
+- You will need to fulfill all of these requirements for the Zoom app to work, aside from the redirect url, they don't really matter, they just need to be filled.
 ![image](https://user-images.githubusercontent.com/46533825/166085023-32f71305-aa72-443c-8972-ab907b2eff71.png)
 
 3. Database connection setup: For the program to be able to connect to the database, you must access the Amazon Web Services EC2 Management Console and add your IP to the inbound rules.
